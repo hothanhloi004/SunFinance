@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.fintrack"
-        minSdk = 32
+        minSdk = 30
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -43,8 +43,10 @@ dependencies {
 
     val cameraxVersion = "1.3.1"
 
-    implementation("androidx.camera:camera-core:$cameraxVersion")
-    implementation("androidx.camera:camera-camera2:$cameraxVersion")
-    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
-    implementation("androidx.camera:camera-view:$cameraxVersion")
+    // CameraX
+    implementation("androidx.camera:camera-camera2:1.3.2")
+    implementation("androidx.camera:camera-lifecycle:1.3.2")
+    implementation("androidx.camera:camera-view:1.3.2")
+// ML Kit Text Recognition
+    implementation("com.google.mlkit:text-recognition:16.0.0")
 }
