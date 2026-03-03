@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">FinTrack</string>
+
+    <!-- Transaction Service -->
+    <string name="expense">Expense</string>
+    <string name="income">Income</string>
+    <string name="add_category">+ Thêm danh mục</string>
+
 </resources>

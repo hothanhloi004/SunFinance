@@ -1,0 +1,240 @@
+package com.example.fintrack.TransactionService.view;
+
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.fintrack.R;
+import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
+import com.example.fintrack.TransactionService.domain.usecase.AddTransactionUseCase;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class AddTransactionActivity extends AppCompatActivity {
+
+    // ===== VIEW =====
+    private EditText edtAmount, edtNote;
+    private Button btnIncome, btnExpense, btnSave;
+    private TextView txtCategoryName, txtCategoryIcon;
+    private TextView txtAccountName, txtBalance;
+    private TextView txtDateTime;
+
+    // ===== STATE =====
+    private String currentTxType = "EXPENSE";
+    private String selectedCategoryId = null;
+    private String selectedAccountId = null;
+    private LocalDate selectedDate;
+    private LocalTime selectedTime;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_transaction_v2);
+
+        // ===== INIT VIEW =====
+        edtAmount = findViewById(R.id.edtAmount);
+        edtNote = findViewById(R.id.edtNote);
+
+        btnIncome = findViewById(R.id.btnIncome);
+        btnExpense = findViewById(R.id.btnExpense);
+        btnSave = findViewById(R.id.btnSave);
+
+        txtCategoryName = findViewById(R.id.txtCategoryName);
+        txtCategoryIcon = findViewById(R.id.txtCategoryIcon);
+
+        txtAccountName = findViewById(R.id.txtAccountName);
+        txtBalance = findViewById(R.id.txtBalance);
+
+        txtDateTime = findViewById(R.id.txtDateTime);
+
+        // ===== DEFAULT DATE TIME =====
+        selectedDate = LocalDate.now();
+        selectedTime = LocalTime.now();
+        updateDateTimeText();
+
+        findViewById(R.id.layoutDateTime)
+                .setOnClickListener(v -> openDatePicker());
+
+        // ===== DEFAULT ACCOUNT (DEMO) =====
+        bindDefaultAccount();
+
+        // ===== TOGGLE THU / CHI =====
+        btnExpense.setOnClickListener(v -> {
+            currentTxType = "EXPENSE";
+            switchToggle(true);
+        });
+
+        btnIncome.setOnClickListener(v -> {
+            currentTxType = "INCOME";
+            switchToggle(false);
+        });
+        TextView txtCategoryName = findViewById(R.id.txtCategoryName);
+        TextView txtCategoryIcon = findViewById(R.id.txtCategoryIcon);
+
+        findViewById(R.id.layoutCategory)
+                .setOnClickListener(v -> {
+                    CategoryPickerBottomSheet sheet =
+                            CategoryPickerBottomSheet.newInstance(
+                                    currentTxType,
+                                    category -> {
+                                        txtCategoryName.setText(category.name);
+                                        txtCategoryIcon.setText(category.icon);
+                                        selectedCategoryId = category.category_id;
+                                    }
+                            );
+                    sheet.show(getSupportFragmentManager(), "category_picker");
+                });
+
+
+        findViewById(R.id.layoutCategory)
+                .setOnClickListener(v -> {
+                    CategoryPickerBottomSheet sheet =
+                            CategoryPickerBottomSheet.newInstance(
+                                    currentTxType,
+                                    category -> {
+                                        txtCategoryName.setText(category.name);
+                                        txtCategoryIcon.setText(category.icon);
+                                        selectedCategoryId = category.category_id;
+                                    }
+                            );
+                    sheet.show(getSupportFragmentManager(), "category_picker");
+                });
+
+        // ===== SAVE =====
+        btnSave.setOnClickListener(v -> addTransaction());
+    }
+
+    // ================= TOGGLE UI =================
+    private void switchToggle(boolean expense) {
+        if (expense) {
+            btnExpense.setBackgroundResource(R.drawable.bg_toggle_active);
+            btnExpense.setTextColor(Color.WHITE);
+
+            btnIncome.setBackgroundResource(R.drawable.bg_toggle_inactive);
+            btnIncome.setTextColor(Color.GRAY);
+        } else {
+            btnIncome.setBackgroundResource(R.drawable.bg_toggle_active);
+            btnIncome.setTextColor(Color.WHITE);
+
+            btnExpense.setBackgroundResource(R.drawable.bg_toggle_inactive);
+            btnExpense.setTextColor(Color.GRAY);
+        }
+
+        bindDefaultAccount();
+        selectedCategoryId = null;
+        txtCategoryName.setText("Chọn danh mục");
+        txtCategoryIcon.setText("📂");
+    }
+
+    // ================= ACCOUNT (DEMO) =================
+    private void bindDefaultAccount() {
+        if ("EXPENSE".equals(currentTxType)) {
+            selectedAccountId = "acc001";
+            txtAccountName.setText("Ví chính");
+            txtBalance.setText("Số dư: 1.200.000 đ");
+        } else {
+            selectedAccountId = "acc002";
+            txtAccountName.setText("Ngân hàng");
+            txtBalance.setText("Số dư: 15.000.000 đ");
+        }
+    }
+
+    // ================= DATE TIME =================
+    private void updateDateTimeText() {
+        txtDateTime.setText(
+                selectedDate + ", " +
+                        String.format("%02d:%02d",
+                                selectedTime.getHour(),
+                                selectedTime.getMinute())
+        );
+    }
+
+    private void openDatePicker() {
+        LocalDate now = LocalDate.now();
+
+        new DatePickerDialog(
+                this,
+                (view, y, m, d) -> {
+                    selectedDate = LocalDate.of(y, m + 1, d);
+                    openTimePicker();
+                },
+                now.getYear(),
+                now.getMonthValue() - 1,
+                now.getDayOfMonth()
+        ).show();
+    }
+
+    private void openTimePicker() {
+        LocalTime now = LocalTime.now();
+
+        new TimePickerDialog(
+                this,
+                (view, h, min) -> {
+                    selectedTime = LocalTime.of(h, min);
+                    updateDateTimeText();
+                },
+                now.getHour(),
+                now.getMinute(),
+                true
+        ).show();
+    }
+
+    // ================= SAVE =================
+    private void addTransaction() {
+
+        String amountStr = edtAmount.getText().toString().trim();
+        String note = edtNote.getText().toString().trim();
+
+        if (amountStr.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập số tiền", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (selectedCategoryId == null) {
+            Toast.makeText(this, "Vui lòng chọn danh mục", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double amount = Double.parseDouble(amountStr);
+        String date = selectedDate.toString();
+
+        new Thread(() -> {
+            try {
+                FintrackDatabase db =
+                        FintrackDatabase.getInstance(getApplicationContext());
+
+                new AddTransactionUseCase(
+                        db.transactionDao(),
+                        db.accountDao(),
+                        db.alertDao()
+                ).execute(
+                        "u001",
+                        currentTxType,
+                        selectedAccountId,
+                        selectedCategoryId,
+                        amount,
+                        note,
+                        date
+                );
+
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Đã thêm giao dịch", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+
+            } catch (Exception e) {
+                runOnUiThread(() ->
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show()
+                );
+            }
+        }).start();
+    }
+}
