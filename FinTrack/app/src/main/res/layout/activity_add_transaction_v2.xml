@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F6F7FB">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- ================= HEADER ================= -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:text="✕"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="Thêm giao dịch"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:text="✓"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+        <!-- ================= AMOUNT ================= -->
+
+        <TextView
+            android:text="SỐ TIỀN"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/edtAmount"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:gravity="center"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:hint="0 đ"
+            android:inputType="number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <!-- ================= TOGGLE ================= -->
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_toggle"
+            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnIncome"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:text="Thu"
+                android:textStyle="bold"
+                android:background="@drawable/bg_toggle_inactive"
+                android:textColor="#666666"/>
+
+            <Button
+                android:id="@+id/btnExpense"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:text="Chi"
+                android:textStyle="bold"
+                android:background="@drawable/bg_toggle_active_dark"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
+
+        <!-- ================= DETAIL TITLE ================= -->
+
+        <TextView
+            android:text="CHI TIẾT GIAO DỊCH"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:layout_marginTop="28dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <!-- ================= ACCOUNT CARD ================= -->
+
+        <LinearLayout
+            android:id="@+id/layoutAccount"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Tài khoản thanh toán"
+                    android:textColor="#888888"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/txtAccountName"
+                    android:text="Ví chính"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/txtBalance"
+                    android:text="Số dư hiện tại: 1.200.000đ"
+                    android:textColor="#666666"
+                    android:textSize="12sp"
+                    android:layout_marginTop="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/txtPreview"
+                    android:text="-50.000đ"
+                    android:textColor="#E53935"
+                    android:textStyle="bold"
+                    android:layout_marginTop="6dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:background="@drawable/bg_wallet_icon">
+
+                <TextView
+                    android:text="💳"
+                    android:gravity="center"
+                    android:textSize="22sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </FrameLayout>
+        </LinearLayout>
+
+
+        <!-- ================= DATE ================= -->
+
+        <LinearLayout
+            android:id="@+id/layoutDateTime"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Ngày &amp; Giờ"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/txtDateTime"
+                android:text="Hôm nay, 14:30"
+                android:textStyle="bold"
+                android:layout_marginStart="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+        <!-- ================= CATEGORY ================= -->
+
+        <LinearLayout
+            android:id="@+id/layoutCategory"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="@drawable/bg_card"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txtCategoryIcon"
+                android:text="🍜"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/txtCategoryName"
+                android:text="Ăn uống"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginStart="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+        <!-- ================= NOTE ================= -->
+
+        <EditText
+            android:id="@+id/edtNote"
+            android:layout_marginTop="12dp"
+            android:hint="Thêm mô tả cho giao dịch này..."
+            android:background="@drawable/bg_card"
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
+        <!-- ================= SAVE BUTTON ================= -->
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_marginTop="28dp"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="💾  Lưu Giao Dịch"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_primary_button"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -12,7 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FinTrack">
         <activity
-            android:name=".MainActivity"
+            android:name=".UserService.view.UserAccountProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserService.view.ForgotPasswordActivity"
+            android:exported="false" /> <!-- 🌟 SPLASH = MÀN HÌNH ĐẦU TIÊN -->
+        <activity
+            android:name=".UserService.view.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +26,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".UserService.view.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserService.view.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
