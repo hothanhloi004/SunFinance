@@ -29,7 +29,7 @@
 
         <!-- Activity chính -->
         <activity
-            android:name=".TransactionService.ScanReceiptActivity"
+            android:name=".TransactionService.view.ScanReceiptActivity"
             android:exported="true">
 
             <intent-filter>

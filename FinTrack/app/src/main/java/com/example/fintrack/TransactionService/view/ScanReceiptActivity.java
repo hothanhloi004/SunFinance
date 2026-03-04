@@ -1,4 +1,4 @@
-package com.example.fintrack.TransactionService;
+package com.example.fintrack.TransactionService.view;
 
 import android.Manifest;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,7 +22,11 @@ import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.fintrack.MainActivity;
 import com.example.fintrack.R;
+import com.example.fintrack.TransactionService.util.ReceiptParser;
+import com.example.fintrack.TransactionService.entity.TransactionEntity;
+import com.example.fintrack.TransactionService.usecase.CreateTransactionUseCase;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -32,8 +35,6 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-
-import android.widget.EditText;
 
 @androidx.camera.core.ExperimentalGetImage
 public class ScanReceiptActivity extends AppCompatActivity {
@@ -266,7 +267,34 @@ public class ScanReceiptActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         });
 
-        btnConfirm.setOnClickListener(v -> returnResult());
+        btnConfirm.setOnClickListener(v -> {
+
+            TransactionEntity transaction = new TransactionEntity();
+
+            transaction.tx_id = "tx_" + System.currentTimeMillis();
+            transaction.user_id = "u001";
+            transaction.tx_type_id = "EXPENSE";
+            transaction.source_account_id = "acc001";
+            transaction.category_id = "FOOD";
+
+            String amountStr = txtTotalAmount.getText().toString().replace("$", "").trim();
+
+            if (amountStr.isEmpty()) {
+                Toast.makeText(this, "Amount required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            transaction.amount = Double.parseDouble(amountStr);
+            transaction.note = txtMerchant.getText().toString();
+            transaction.tx_date = txtDate.getText().toString();
+            transaction.created_at = System.currentTimeMillis();
+
+            CreateTransactionUseCase useCase = new CreateTransactionUseCase(this);
+            useCase.execute(transaction);
+
+            Toast.makeText(this, "Transaction Saved!", Toast.LENGTH_SHORT).show();
+
+        });
     }
 
     // ===========================
