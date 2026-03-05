@@ -17,9 +17,9 @@
 
             <ImageView
                 android:id="@+id/btnBack"
-                android:src="@drawable/ic_back"
-                android:layout_width="24dp"
-                android:layout_height="24dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_back" />
 
             <TextView
                 android:text="SunFinance Profile"
