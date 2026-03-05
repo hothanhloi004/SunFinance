@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Base -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Card -->
+    <color name="card_bg">#FFFFFF</color>
 
+    <!-- Primary -->
+    <color name="primary_green">#2ECC71</color>
+    <color name="primary_green_dark">#27AE60</color>
+    <color name="primary_dark">#1E8449</color>
+
+    <!-- Text -->
+    <color name="text_secondary">#666666</color>
+
+    <!-- Danger -->
+    <color name="danger">#E74C3C</color>
+
+    <!-- Icon colors -->
+    <color name="blue">#4A90E2</color>
+    <color name="orange">#F39C12</color>
+    <color name="yellow">#F1C40F</color>
+
+    <!-- Wallet -->
+    <color name="wallet_bg">#2ECC71</color>
+
+    <!-- Toggle -->
+    <color name="toggle_bg">#EAEAEA</color>
 
 </resources>
