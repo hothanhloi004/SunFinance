@@ -2,7 +2,7 @@ package com.example.fintrack.TransactionService.usecase;
 
 import android.content.Context;
 
-import com.example.fintrack.TransactionService.entity.TransactionEntity;
+import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 import com.example.fintrack.TransactionService.service.TransactionService;
 
 public class CreateTransactionUseCase {

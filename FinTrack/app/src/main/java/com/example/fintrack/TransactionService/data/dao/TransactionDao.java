@@ -11,25 +11,32 @@ import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 
 import java.util.List;
 
+
+
 @Dao
 public interface TransactionDao {
 
-    // ===== BASIC CRUD =====
-
+    // ===== INSERT =====
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(TransactionEntity transaction);
 
+    // ===== UPDATE =====
     @Update
     void update(TransactionEntity transaction);
 
+    // ===== DELETE =====
     @Delete
     void delete(TransactionEntity transaction);
 
+    // ===== GET BY ID =====
     @Query("SELECT * FROM transactions WHERE tx_id = :txId LIMIT 1")
     TransactionEntity getById(String txId);
 
-    // ===== HISTORY + SEARCH =====
+    // ===== GET ALL =====
+    @Query("SELECT * FROM transactions ORDER BY created_at DESC")
+    List<TransactionEntity> getAll();
 
+    // ===== SEARCH / FILTER =====
     @Query(
             "SELECT * FROM transactions " +
                     "WHERE user_id = :userId " +

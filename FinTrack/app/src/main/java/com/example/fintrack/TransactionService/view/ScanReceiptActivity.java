@@ -25,7 +25,7 @@ import androidx.core.content.ContextCompat;
 import com.example.fintrack.MainActivity;
 import com.example.fintrack.R;
 import com.example.fintrack.TransactionService.util.ReceiptParser;
-import com.example.fintrack.TransactionService.entity.TransactionEntity;
+import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 import com.example.fintrack.TransactionService.usecase.CreateTransactionUseCase;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
@@ -287,7 +287,7 @@ public class ScanReceiptActivity extends AppCompatActivity {
             transaction.amount = Double.parseDouble(amountStr);
             transaction.note = txtMerchant.getText().toString();
             transaction.tx_date = txtDate.getText().toString();
-            transaction.created_at = System.currentTimeMillis();
+            transaction.created_at = String.valueOf(System.currentTimeMillis());
 
             CreateTransactionUseCase useCase = new CreateTransactionUseCase(this);
             useCase.execute(transaction);
