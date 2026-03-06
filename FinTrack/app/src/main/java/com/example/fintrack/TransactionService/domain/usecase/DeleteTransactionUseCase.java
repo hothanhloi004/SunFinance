@@ -1,45 +1,76 @@
 package com.example.fintrack.TransactionService.domain.usecase;
 
-import com.example.fintrack.TransactionService.data.dao.AccountDao;
+import com.example.fintrack.AccountService.api.IAccountApi;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
+
 import androidx.room.Transaction;
 
 public class DeleteTransactionUseCase {
 
     private final TransactionDao transactionDao;
-    private final AccountDao accountDao;
+    private final IAccountApi accountApi;
 
     public DeleteTransactionUseCase(
             TransactionDao transactionDao,
-            AccountDao accountDao
+            IAccountApi accountApi
     ) {
         this.transactionDao = transactionDao;
-        this.accountDao = accountDao;
+        this.accountApi = accountApi;
     }
 
-    /**
-     * Xóa giao dịch Thu / Chi
-     */
     @Transaction
     public void execute(String txId) {
 
-        // ===== 1. LẤY TRANSACTION =====
         TransactionEntity tx = transactionDao.getById(txId);
+
         if (tx == null) {
             throw new IllegalArgumentException("Transaction not found");
         }
 
-        // ===== 2. ROLLBACK BALANCE =====
+        // ===== INCOME =====
         if ("INCOME".equals(tx.tx_type_id)) {
-            // Thu nhập → trừ lại
-            accountDao.updateBalance(tx.target_account_id, -tx.amount);
-        } else if ("EXPENSE".equals(tx.tx_type_id)) {
-            // Chi tiêu → cộng lại
-            accountDao.updateBalance(tx.source_account_id, tx.amount);
+
+            if (tx.target_account_id != null) {
+                accountApi.updateBalance(
+                        tx.target_account_id,
+                        -tx.amount
+                );
+            }
+
         }
 
-        // ===== 3. DELETE TRANSACTION =====
+        // ===== EXPENSE =====
+        else if ("EXPENSE".equals(tx.tx_type_id)) {
+
+            if (tx.source_account_id != null) {
+                accountApi.updateBalance(
+                        tx.source_account_id,
+                        tx.amount
+                );
+            }
+
+        }
+
+        // ===== TRANSFER =====
+        else if ("TRANSFER".equals(tx.tx_type_id)) {
+
+            if (tx.source_account_id != null) {
+                accountApi.updateBalance(
+                        tx.source_account_id,
+                        tx.amount
+                );
+            }
+
+            if (tx.target_account_id != null) {
+                accountApi.updateBalance(
+                        tx.target_account_id,
+                        -tx.amount
+                );
+            }
+
+        }
+
         transactionDao.delete(tx);
     }
 }

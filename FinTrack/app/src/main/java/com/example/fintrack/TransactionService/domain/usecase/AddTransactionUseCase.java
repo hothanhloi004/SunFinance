@@ -10,21 +10,24 @@ import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-
+import com.example.fintrack.AccountService.api.IAccountApi;
 public class AddTransactionUseCase {
 
     private final TransactionDao transactionDao;
     private final AccountDao accountDao;
     private final AlertDao alertDao;
+    private final IAccountApi accountApi;
 
     public AddTransactionUseCase(
             TransactionDao transactionDao,
             AccountDao accountDao,
-            AlertDao alertDao
+            AlertDao alertDao,
+            IAccountApi accountApi
     ) {
         this.transactionDao = transactionDao;
         this.accountDao = accountDao;
         this.alertDao = alertDao;
+        this.accountApi = accountApi;
     }
 
     /**
@@ -53,12 +56,19 @@ public class AddTransactionUseCase {
         if (categoryId == null || categoryId.isEmpty()) {
             throw new IllegalArgumentException("Category is required");
         }
-
+        if (accountId == null || accountId.isEmpty()) {
+            throw new IllegalArgumentException("Account is required");
+        }
         // ===== 2. UPDATE BALANCE =====
+        if (accountId == null || accountId.isEmpty()) {
+            throw new IllegalArgumentException("Account is required");
+        }
+
         double balanceChange =
                 "INCOME".equals(txTypeId) ? amount : -amount;
 
-        accountDao.updateBalance(accountId, balanceChange);
+        accountApi.updateBalance(accountId, balanceChange);
+
 
         // ===== 3. CREATE TRANSACTION =====
         TransactionEntity tx = new TransactionEntity();

@@ -11,48 +11,93 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FinTrack">
-        <activity
-            android:name=".UserService.view.UserAccountProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UserService.view.ForgotPasswordActivity"
-            android:exported="false" /> <!-- 🌟 SPLASH = MÀN HÌNH ĐẦU TIÊN -->
-        <activity
-            android:name=".UserService.view.SplashActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <!-- ================= USER SERVICE ================= -->
+
+        <activity
+            android:name=".TransactionService.view.HistoryActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
         </activity>
+
         <activity
             android:name=".UserService.view.LoginActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".UserService.view.RegisterActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
+        <activity
+            android:name=".UserService.view.UserAccountProfileActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".UserService.view.ForgotPasswordActivity"
+            android:exported="false"/>
+
+        <!-- TRANSACTION SERVICE
+
+
+
+
+
+        -->
+
+        <activity
+            android:name=".TransactionService.view.TransferActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".TransactionService.view.AddTransactionActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".TransactionService.view.UpdateDeleteTransactionActivity"
+            android:exported="false"/>
+
+
+        <activity
+            android:name=".TransactionService.view.CategoryManagementActivity"
+            android:exported="false"/>
+        <!-- ================= MAIN ================= -->
+
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
+        <!-- ================= ACCOUNT SERVICE ================= -->
+
         <activity
             android:name=".AccountService.view.AccountDashboardActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".AccountService.view.ManageWalletActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".AccountService.view.WalletDetailActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".AccountService.view.ActiveWalletsActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".AccountService.view.HiddenWalletsActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
         <activity
             android:name=".AccountService.view.WalletTypeActivity"
-            android:exported="false" />
+            android:exported="false"/>
+
+
+
     </application>
 
 </manifest>

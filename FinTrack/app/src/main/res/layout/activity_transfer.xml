@@ -70,7 +70,7 @@
 
                 <TextView
                     android:id="@+id/tvSourceBalance"
-                    android:text="Balance: 10,000,000 VND"
+                    android:text="Balance: ..."
                     android:textColor="#777777"
                     android:textSize="13sp"
                     android:layout_marginTop="4dp"
@@ -147,7 +147,7 @@
 
                 <TextView
                     android:id="@+id/tvTargetBalance"
-                    android:text="Balance: 50,000,000 VND"
+                    android:text="Balance: ..."
                     android:textColor="#777777"
                     android:textSize="13sp"
                     android:layout_marginTop="4dp"
@@ -197,7 +197,7 @@
 
             <EditText
                 android:id="@+id/edtAmount"
-                android:text="VND 2,500,000"
+                android:hint="Nhập số tiền"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:gravity="center"

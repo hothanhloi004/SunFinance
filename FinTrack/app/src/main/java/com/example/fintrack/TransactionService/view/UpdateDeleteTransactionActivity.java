@@ -13,7 +13,8 @@ import com.example.fintrack.R;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
 import com.example.fintrack.TransactionService.domain.usecase.DeleteTransactionUseCase;
 import com.example.fintrack.TransactionService.domain.usecase.UpdateTransactionUseCase;
-
+import com.example.fintrack.AccountService.api.AccountApiImpl;
+import com.example.fintrack.AccountService.api.IAccountApi;
 public class UpdateDeleteTransactionActivity extends AppCompatActivity {
 
     private String txId;
@@ -32,8 +33,16 @@ public class UpdateDeleteTransactionActivity extends AppCompatActivity {
 
         btnUpdate.setOnClickListener(v -> {
 
-            double newAmount =
-                    Double.parseDouble(edtAmount.getText().toString());
+            String amountText = edtAmount.getText().toString();
+
+            if (amountText.isEmpty()) {
+                runOnUiThread(() ->
+                        Toast.makeText(this, "Amount required", Toast.LENGTH_SHORT).show()
+                );
+                return;
+            }
+
+            double newAmount = Double.parseDouble(amountText);
             String newNote = edtNote.getText().toString();
 
             new Thread(() -> {
@@ -43,21 +52,35 @@ public class UpdateDeleteTransactionActivity extends AppCompatActivity {
                 UpdateTransactionUseCase useCase =
                         new UpdateTransactionUseCase(
                                 db.transactionDao(),
-                                db.accountDao()
+                                new AccountApiImpl(getApplicationContext())
                         );
 
                 // 🔑 LẤY TRANSACTION CŨ
                 TransactionEntity oldTx =
                         db.transactionDao().getById(txId);
 
-                // 🔑 GIỮ NGUYÊN CÁC FIELD CHƯA CHO SỬA
+                if (oldTx == null) {
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "Transaction not found", Toast.LENGTH_SHORT).show()
+                    );
+                    return;
+                }
+
+                String accountId;
+
+                if ("EXPENSE".equals(oldTx.tx_type_id)) {
+                    accountId = oldTx.source_account_id;
+                } else if ("INCOME".equals(oldTx.tx_type_id)) {
+                    accountId = oldTx.target_account_id;
+                } else {
+                    accountId = null;
+                }
+
                 useCase.execute(
                         txId,
                         newAmount,
                         newNote,
-                        oldTx.tx_type_id.equals("EXPENSE")
-                                ? oldTx.source_account_id
-                                : oldTx.target_account_id,
+                        accountId,
                         oldTx.category_id,
                         oldTx.tx_type_id,
                         oldTx.tx_date
@@ -69,6 +92,8 @@ public class UpdateDeleteTransactionActivity extends AppCompatActivity {
                             "Cập nhật thành công",
                             Toast.LENGTH_SHORT
                     ).show();
+
+                    setResult(RESULT_OK);
                     finish();
                 });
             }).start();
@@ -82,7 +107,7 @@ public class UpdateDeleteTransactionActivity extends AppCompatActivity {
                 DeleteTransactionUseCase deleteUseCase =
                         new DeleteTransactionUseCase(
                                 db.transactionDao(),
-                                db.accountDao()
+                                new AccountApiImpl(getApplicationContext())
                         );
 
                 deleteUseCase.execute(txId);
@@ -93,6 +118,8 @@ public class UpdateDeleteTransactionActivity extends AppCompatActivity {
                             "Đã xoá giao dịch",
                             Toast.LENGTH_SHORT
                     ).show();
+
+                    setResult(RESULT_OK);
                     finish();
                 });
             }).start();

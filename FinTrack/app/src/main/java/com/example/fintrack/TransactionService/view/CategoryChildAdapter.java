@@ -42,11 +42,14 @@ public class CategoryChildAdapter
     @Override
     public void onBindViewHolder(@NonNull VH h, int pos) {
         CategoryEntity c = list.get(pos);
-        h.name.setText(c.name);
-        h.btnEdit.setOnClickListener(v -> listener.onEdit(c));
-        h.btnDelete.setOnClickListener(v -> listener.onDelete(c));
-        h.itemView.setOnClickListener(v -> listener.onClick(c));
 
+        h.name.setText(c.name);
+
+        // ẨN Edit/Delete khi dùng trong Category Picker
+        h.btnEdit.setVisibility(View.GONE);
+        h.btnDelete.setVisibility(View.GONE);
+
+        h.itemView.setOnClickListener(v -> listener.onClick(c));
     }
 
     @Override

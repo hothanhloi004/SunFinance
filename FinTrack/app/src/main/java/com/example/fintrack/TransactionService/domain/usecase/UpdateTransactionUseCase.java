@@ -1,26 +1,24 @@
 package com.example.fintrack.TransactionService.domain.usecase;
 
-import com.example.fintrack.TransactionService.data.dao.AccountDao;
+import com.example.fintrack.AccountService.api.IAccountApi;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
+
 import androidx.room.Transaction;
 
 public class UpdateTransactionUseCase {
 
     private final TransactionDao transactionDao;
-    private final AccountDao accountDao;
+    private final IAccountApi accountApi;
 
     public UpdateTransactionUseCase(
             TransactionDao transactionDao,
-            AccountDao accountDao
+            IAccountApi accountApi
     ) {
         this.transactionDao = transactionDao;
-        this.accountDao = accountDao;
+        this.accountApi = accountApi;
     }
 
-    /**
-     * Sửa giao dịch Thu / Chi
-     */
     @Transaction
     public void execute(
             String txId,
@@ -31,43 +29,57 @@ public class UpdateTransactionUseCase {
             String newTxTypeId,
             String newTxDate
     ) {
+
         TransactionEntity oldTx = transactionDao.getById(txId);
+
         if (oldTx == null) {
             throw new IllegalArgumentException("Transaction not found");
         }
 
-        // 1. Rollback balance cũ
+        // ===== ROLLBACK OLD =====
+
         if ("INCOME".equals(oldTx.tx_type_id)) {
-            accountDao.updateBalance(oldTx.target_account_id, -oldTx.amount);
-        } else if ("EXPENSE".equals(oldTx.tx_type_id)) {
-            accountDao.updateBalance(oldTx.source_account_id, oldTx.amount);
+
+            accountApi.updateBalance(oldTx.target_account_id, -oldTx.amount);
+
+        }
+        else if ("EXPENSE".equals(oldTx.tx_type_id)) {
+
+            accountApi.updateBalance(oldTx.source_account_id, oldTx.amount);
+
+        }
+        else if ("TRANSFER".equals(oldTx.tx_type_id)) {
+
+            accountApi.updateBalance(oldTx.source_account_id, oldTx.amount);
+            accountApi.updateBalance(oldTx.target_account_id, -oldTx.amount);
         }
 
-        // 2. Validate
-        if (newAmount <= 0) {
-            throw new IllegalArgumentException("Amount must be > 0");
-        }
+        // ===== APPLY NEW =====
 
-        // 3. Apply balance mới
         if ("INCOME".equals(newTxTypeId)) {
-            accountDao.updateBalance(newAccountId, newAmount);
-        } else {
-            accountDao.updateBalance(newAccountId, -newAmount);
+
+            accountApi.updateBalance(newAccountId, newAmount);
+
+        }
+        else if ("EXPENSE".equals(newTxTypeId)) {
+
+            accountApi.updateBalance(newAccountId, -newAmount);
+
+        }
+        else if ("TRANSFER".equals(newTxTypeId)) {
+
+            accountApi.updateBalance(oldTx.source_account_id, -newAmount);
+            accountApi.updateBalance(oldTx.target_account_id, newAmount);
         }
 
-        // 4. Update transaction
+        // ===== UPDATE ENTITY =====
+
         oldTx.amount = newAmount;
         oldTx.note = newNote;
         oldTx.category_id = newCategoryId;
         oldTx.tx_type_id = newTxTypeId;
         oldTx.tx_date = newTxDate;
 
-        oldTx.source_account_id =
-                "EXPENSE".equals(newTxTypeId) ? newAccountId : null;
-        oldTx.target_account_id =
-                "INCOME".equals(newTxTypeId) ? newAccountId : null;
-
         transactionDao.update(oldTx);
     }
-
 }

@@ -1,9 +1,8 @@
 package com.example.fintrack.TransactionService.domain.usecase;
 
-import com.example.fintrack.TransactionService.data.dao.AccountDao;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
-import com.example.fintrack.TransactionService.data.entity.AccountEntity;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
+import com.example.fintrack.AccountService.api.IAccountApi;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,15 +10,15 @@ import java.util.UUID;
 
 public class TransferMoneyUseCase {
 
-    private final AccountDao accountDao;
     private final TransactionDao transactionDao;
+    private final IAccountApi accountApi;
 
     public TransferMoneyUseCase(
-            AccountDao accountDao,
-            TransactionDao transactionDao
+            TransactionDao transactionDao,
+            IAccountApi accountApi
     ) {
-        this.accountDao = accountDao;
         this.transactionDao = transactionDao;
+        this.accountApi = accountApi;
     }
 
     public void execute(
@@ -41,25 +40,16 @@ public class TransferMoneyUseCase {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be > 0");
         }
+        double sourceBalance = accountApi.getBalance(sourceAccountId);
 
-        AccountEntity source = accountDao.getById(sourceAccountId);
-        AccountEntity target = accountDao.getById(targetAccountId);
-
-        if (source == null) {
-            throw new IllegalArgumentException("Source account not found");
-        }
-
-        if (target == null) {
-            throw new IllegalArgumentException("Target account not found");
-        }
-
-        if (source.balance < amount) {
+        if (sourceBalance < amount) {
             throw new IllegalArgumentException("Không đủ số dư");
         }
+        // cập nhật số dư thông qua AccountService
+        accountApi.updateBalance(sourceAccountId, -amount);
+        accountApi.updateBalance(targetAccountId, amount);
 
-        accountDao.updateBalance(sourceAccountId, -amount);
-        accountDao.updateBalance(targetAccountId, amount);
-
+        // tạo transaction
         TransactionEntity tx = new TransactionEntity();
         tx.tx_id = UUID.randomUUID().toString();
         tx.user_id = userId;

@@ -143,7 +143,7 @@
 
                 <TextView
                     android:id="@+id/txtBalance"
-                    android:text="Số dư hiện tại: 1.200.000đ"
+                    android:text="Số dư: ..."
                     android:textColor="#666666"
                     android:textSize="12sp"
                     android:layout_marginTop="2dp"
@@ -152,7 +152,7 @@
 
                 <TextView
                     android:id="@+id/txtPreview"
-                    android:text="-50.000đ"
+                    android:text=""
                     android:textColor="#E53935"
                     android:textStyle="bold"
                     android:layout_marginTop="6dp"

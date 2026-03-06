@@ -200,6 +200,14 @@ public class HistoryActivity extends AppCompatActivity {
             }).start();
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (btnSearch != null) {
+            btnSearch.performClick();
+        }
+    }
 
     // ===== LOAD CATEGORY SPINNER (HIỂN THỊ NAME, DÙNG ID) =====
     private void loadCategorySpinner(Spinner spinnerCategory) {

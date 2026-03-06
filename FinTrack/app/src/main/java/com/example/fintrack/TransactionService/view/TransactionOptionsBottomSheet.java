@@ -15,7 +15,7 @@ import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
 import com.example.fintrack.TransactionService.domain.usecase.DeleteTransactionUseCase;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import android.content.Intent;
-
+import com.example.fintrack.AccountService.api.AccountApiImpl;
 public class TransactionOptionsBottomSheet extends BottomSheetDialogFragment {
 
     private static final String ARG_TX_ID = "tx_id";
@@ -61,22 +61,29 @@ public class TransactionOptionsBottomSheet extends BottomSheetDialogFragment {
         // 🗑 DELETE
         btnDelete.setOnClickListener(view -> {
             new Thread(() -> {
+
                 FintrackDatabase db =
                         FintrackDatabase.getInstance(requireContext());
 
                 new DeleteTransactionUseCase(
                         db.transactionDao(),
-                        db.accountDao()
+                        new AccountApiImpl(requireContext())
                 ).execute(txId);
 
                 requireActivity().runOnUiThread(() -> {
+
                     Toast.makeText(
                             getContext(),
                             "Đã xoá giao dịch",
                             Toast.LENGTH_SHORT
                     ).show();
+
                     dismiss();
+
+                    // refresh History
+                    requireActivity().recreate();
                 });
+
             }).start();
         });
 
