@@ -27,7 +27,7 @@ import androidx.annotation.NonNull;
                 UserEntity.class,
                 AccountTypeEntity.class
         },
-        version = 9, //  TĂNG VERSION
+        version = 11, //  TĂNG VERSION
         exportSchema = false
 )
 public abstract class FintrackDatabase extends RoomDatabase {
