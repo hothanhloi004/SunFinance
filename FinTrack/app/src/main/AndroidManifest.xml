@@ -35,6 +35,24 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+        <activity
+            android:name=".AccountService.view.AccountDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountService.view.ManageWalletActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountService.view.WalletDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountService.view.ActiveWalletsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountService.view.HiddenWalletsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountService.view.WalletTypeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
