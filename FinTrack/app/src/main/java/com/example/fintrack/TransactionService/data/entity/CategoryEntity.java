@@ -21,6 +21,28 @@ public class CategoryEntity {
 
     public String parent_category_id;
 
+    // ===== logic từ code của bạn =====
+    public static String suggestCategory(String description){
+
+        if(description == null) return "Other";
+
+        description = description.toLowerCase();
+
+        if(description.contains("coffee") || description.contains("cafe"))
+            return "Food";
+
+        if(description.contains("grab") || description.contains("taxi"))
+            return "Transport";
+
+        if(description.contains("salary"))
+            return "Income";
+
+        if(description.contains("shopping"))
+            return "Shopping";
+
+        return "Other";
+    }
+
     @Override
     public String toString() {
         return name == null ? "Không có" : name;

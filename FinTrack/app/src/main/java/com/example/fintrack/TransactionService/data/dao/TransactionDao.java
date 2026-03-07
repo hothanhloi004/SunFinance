@@ -11,8 +11,6 @@ import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 
 import java.util.List;
 
-
-
 @Dao
 public interface TransactionDao {
 
@@ -35,6 +33,14 @@ public interface TransactionDao {
     // ===== GET ALL =====
     @Query("SELECT * FROM transactions ORDER BY created_at DESC")
     List<TransactionEntity> getAll();
+
+    // ===== GET LATEST TRANSACTION (thêm từ code bạn)
+    @Query("SELECT * FROM transactions ORDER BY created_at DESC LIMIT 1")
+    TransactionEntity getLatestTransaction();
+
+    // ===== CHECK DUPLICATE (thêm từ code bạn)
+    @Query("SELECT * FROM transactions WHERE tx_date = :date AND note = :note LIMIT 1")
+    TransactionEntity checkDuplicate(String date, String note);
 
     // ===== SEARCH / FILTER =====
     @Query(
