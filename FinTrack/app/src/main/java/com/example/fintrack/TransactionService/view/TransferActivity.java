@@ -10,12 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
-import com.example.fintrack.TransactionService.data.entity.AccountEntity;
 import com.example.fintrack.TransactionService.domain.usecase.TransferMoneyUseCase;
+import com.example.fintrack.AccountService.api.AccountApiImpl;
+import com.example.fintrack.AccountService.model.AccountEntity;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import com.example.fintrack.AccountService.api.AccountApiImpl;
+
 public class TransferActivity extends AppCompatActivity {
 
     private final DecimalFormat df = new DecimalFormat("#,###");
@@ -33,23 +34,29 @@ public class TransferActivity extends AppCompatActivity {
 
     private List<AccountEntity> accounts;
 
+    private AccountApiImpl accountApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
+
+        accountApi = new AccountApiImpl(getApplicationContext());
 
         initViews();
         loadAccounts();
         setupPresetButtons();
         setupTransfer();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        loadAccounts();     // reload lại list accounts
+        loadAccounts();
     }
 
     private void initViews() {
+
         tvSourceAccount = findViewById(R.id.tvSourceAccount);
         tvSourceBalance = findViewById(R.id.tvSourceBalance);
 
@@ -72,11 +79,8 @@ public class TransferActivity extends AppCompatActivity {
 
         new Thread(() -> {
 
-            FintrackDatabase db =
-                    FintrackDatabase.getInstance(getApplicationContext());
-
             List<AccountEntity> result =
-                    db.accountDao().getAccountsByUser("u001");
+                    accountApi.getAccountsByUser("u001");
 
             runOnUiThread(() -> {
 
@@ -89,25 +93,23 @@ public class TransferActivity extends AppCompatActivity {
                     return;
                 }
 
-                // giữ lại ví đã chọn nếu còn tồn tại
                 AccountEntity source = null;
                 AccountEntity target = null;
 
                 for (AccountEntity acc : accounts) {
-                    if (acc.account_id.equals(selectedSourceId)) {
+
+                    if (acc.accountId.equals(selectedSourceId))
                         source = acc;
-                    }
-                    if (acc.account_id.equals(selectedTargetId)) {
+
+                    if (acc.accountId.equals(selectedTargetId))
                         target = acc;
-                    }
                 }
 
-                // nếu chưa chọn ví → dùng mặc định
                 if (source == null) source = accounts.get(0);
                 if (target == null) target = accounts.get(1);
 
-                selectedSourceId = source.account_id;
-                selectedTargetId = target.account_id;
+                selectedSourceId = source.accountId;
+                selectedTargetId = target.accountId;
 
                 tvSourceAccount.setText(source.name);
                 tvSourceBalance.setText("Balance: " + df.format(source.balance) + " VND");
@@ -128,7 +130,9 @@ public class TransferActivity extends AppCompatActivity {
                         this,
                         accounts,
                         account -> {
-                            selectedSourceId = account.account_id;
+
+                            selectedSourceId = account.accountId;
+
                             tvSourceAccount.setText(account.name);
                             tvSourceBalance.setText(
                                     "Balance: " + df.format(account.balance) + " VND"
@@ -142,7 +146,9 @@ public class TransferActivity extends AppCompatActivity {
                         this,
                         accounts,
                         account -> {
-                            selectedTargetId = account.account_id;
+
+                            selectedTargetId = account.accountId;
+
                             tvTargetAccount.setText(account.name);
                             tvTargetBalance.setText(
                                     "Balance: " + df.format(account.balance) + " VND"
@@ -153,6 +159,7 @@ public class TransferActivity extends AppCompatActivity {
     }
 
     private void setupPresetButtons() {
+
         btn500k.setOnClickListener(v -> addAmount(500_000));
         btn1m.setOnClickListener(v -> addAmount(1_000_000));
         btn5m.setOnClickListener(v -> addAmount(5_000_000));
@@ -163,6 +170,7 @@ public class TransferActivity extends AppCompatActivity {
         btnTransfer.setOnClickListener(v -> {
 
             if (selectedSourceId == null || selectedTargetId == null) {
+
                 Toast.makeText(this,
                         "Vui lòng chọn ví",
                         Toast.LENGTH_SHORT).show();
@@ -170,6 +178,7 @@ public class TransferActivity extends AppCompatActivity {
             }
 
             if (selectedSourceId.equals(selectedTargetId)) {
+
                 Toast.makeText(this,
                         "Source và Target không được trùng",
                         Toast.LENGTH_LONG).show();
@@ -181,6 +190,7 @@ public class TransferActivity extends AppCompatActivity {
                     .replaceAll("[^0-9]", "");
 
             if (amountStr.isEmpty()) {
+
                 Toast.makeText(this,
                         "Vui lòng nhập số tiền",
                         Toast.LENGTH_SHORT).show();
@@ -197,13 +207,11 @@ public class TransferActivity extends AppCompatActivity {
     private void executeTransfer(double amount, String note) {
 
         new Thread(() -> {
+
             try {
 
                 FintrackDatabase db =
                         FintrackDatabase.getInstance(getApplicationContext());
-
-                AccountApiImpl accountApi =
-                        new AccountApiImpl(getApplicationContext());
 
                 TransferMoneyUseCase useCase =
                         new TransferMoneyUseCase(
@@ -220,22 +228,27 @@ public class TransferActivity extends AppCompatActivity {
                 );
 
                 runOnUiThread(() -> {
+
                     Toast.makeText(this,
                             "Chuyển tiền thành công",
                             Toast.LENGTH_SHORT).show();
-                    loadAccounts();      // cập nhật lại list accounts
+
+                    loadAccounts();
                 });
 
             } catch (Exception e) {
+
                 runOnUiThread(() ->
                         Toast.makeText(this,
                                 e.getMessage(),
                                 Toast.LENGTH_LONG).show());
             }
+
         }).start();
     }
 
     private void addAmount(int add) {
+
         String cur = edtAmount.getText()
                 .toString()
                 .replaceAll("[^0-9]", "");
@@ -244,48 +257,5 @@ public class TransferActivity extends AppCompatActivity {
         val += add;
 
         edtAmount.setText(String.valueOf(val));
-    }
-    private void refreshSelectedBalances() {
-        if (accounts == null) return;
-
-        for (AccountEntity acc : accounts) {
-            if (acc.account_id.equals(selectedSourceId)) {
-                tvSourceBalance.setText("Balance: " + df.format(acc.balance) + " VND");
-            }
-            if (acc.account_id.equals(selectedTargetId)) {
-                tvTargetBalance.setText("Balance: " + df.format(acc.balance) + " VND");
-            }
-        }
-    }
-    private void reloadBalance() {
-
-        new Thread(() -> {
-
-            FintrackDatabase db =
-                    FintrackDatabase.getInstance(getApplicationContext());
-
-            AccountEntity source =
-                    db.accountDao().getById(selectedSourceId);
-
-            AccountEntity target =
-                    db.accountDao().getById(selectedTargetId);
-
-            runOnUiThread(() -> {
-
-                if (source != null) {
-                    tvSourceBalance.setText(
-                            "Balance: " + df.format(source.balance) + " VND"
-                    );
-                }
-
-                if (target != null) {
-                    tvTargetBalance.setText(
-                            "Balance: " + df.format(target.balance) + " VND"
-                    );
-                }
-
-            });
-
-        }).start();
     }
 }

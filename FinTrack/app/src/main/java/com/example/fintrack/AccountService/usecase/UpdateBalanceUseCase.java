@@ -2,8 +2,8 @@ package com.example.fintrack.AccountService.usecase;
 
 import android.content.Context;
 
-import com.example.fintrack.TransactionService.data.dao.AccountDao;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
+import com.example.fintrack.AccountService.data.AccountDao;
 
 public class UpdateBalanceUseCase {
 
@@ -16,5 +16,4 @@ public class UpdateBalanceUseCase {
     public void execute(String accountId, double amount) {
         accountDao.updateBalance(accountId, amount);
     }
-
 }

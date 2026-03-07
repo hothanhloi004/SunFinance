@@ -2,37 +2,31 @@ package com.example.fintrack.TransactionService.domain.usecase;
 
 import androidx.room.Transaction;
 
-import com.example.fintrack.TransactionService.data.dao.AccountDao;
 import com.example.fintrack.TransactionService.data.dao.AlertDao;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
+import com.example.fintrack.AccountService.api.IAccountApi;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-import com.example.fintrack.AccountService.api.IAccountApi;
+
 public class AddTransactionUseCase {
 
     private final TransactionDao transactionDao;
-    private final AccountDao accountDao;
     private final AlertDao alertDao;
     private final IAccountApi accountApi;
 
     public AddTransactionUseCase(
             TransactionDao transactionDao,
-            AccountDao accountDao,
             AlertDao alertDao,
             IAccountApi accountApi
     ) {
         this.transactionDao = transactionDao;
-        this.accountDao = accountDao;
         this.alertDao = alertDao;
         this.accountApi = accountApi;
     }
 
-    /**
-     * CHỈ XỬ LÝ: INCOME / EXPENSE
-     */
     @Transaction
     public void execute(
             String userId,
@@ -44,7 +38,7 @@ public class AddTransactionUseCase {
             String txDate
     ) {
 
-        // ===== 1. VALIDATE =====
+        // ===== VALIDATE =====
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be > 0");
         }
@@ -56,21 +50,18 @@ public class AddTransactionUseCase {
         if (categoryId == null || categoryId.isEmpty()) {
             throw new IllegalArgumentException("Category is required");
         }
-        if (accountId == null || accountId.isEmpty()) {
-            throw new IllegalArgumentException("Account is required");
-        }
-        // ===== 2. UPDATE BALANCE =====
+
         if (accountId == null || accountId.isEmpty()) {
             throw new IllegalArgumentException("Account is required");
         }
 
+        // ===== UPDATE BALANCE =====
         double balanceChange =
                 "INCOME".equals(txTypeId) ? amount : -amount;
 
         accountApi.updateBalance(accountId, balanceChange);
 
-
-        // ===== 3. CREATE TRANSACTION =====
+        // ===== CREATE TRANSACTION =====
         TransactionEntity tx = new TransactionEntity();
         tx.tx_id = UUID.randomUUID().toString();
         tx.user_id = userId;
@@ -89,14 +80,13 @@ public class AddTransactionUseCase {
 
         LocalDate date =
                 LocalDate.parse(txDate, DateTimeFormatter.ISO_DATE);
+
         tx.month = date.getYear() + "-" +
                 String.format("%02d", date.getMonthValue());
 
         tx.created_at = String.valueOf(System.currentTimeMillis());
 
-        // ===== 4. SAVE =====
+        // ===== SAVE =====
         transactionDao.insert(tx);
-
-        // ⚠️ ALERT: KHÔNG cập nhật current_spent (để tránh sai lệch)
     }
 }

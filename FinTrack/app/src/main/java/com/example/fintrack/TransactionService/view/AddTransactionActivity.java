@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
-import com.example.fintrack.TransactionService.data.entity.AccountEntity;
 import com.example.fintrack.TransactionService.domain.usecase.AddTransactionUseCase;
 import com.example.fintrack.AccountService.api.AccountApiImpl;
 
@@ -21,19 +20,18 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import com.example.fintrack.AccountService.model.AccountEntity;
 
 public class AddTransactionActivity extends AppCompatActivity {
 
     private final DecimalFormat df = new DecimalFormat("#,###");
 
-    // VIEW
     private EditText edtAmount, edtNote;
     private Button btnIncome, btnExpense, btnSave;
     private TextView txtCategoryName, txtCategoryIcon;
     private TextView txtAccountName, txtBalance;
     private TextView txtDateTime;
 
-    // STATE
     private String currentTxType = "EXPENSE";
     private String selectedCategoryId = null;
     private String selectedAccountId = null;
@@ -43,10 +41,14 @@ public class AddTransactionActivity extends AppCompatActivity {
 
     private List<AccountEntity> accounts;
 
+    private AccountApiImpl accountApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction_v2);
+
+        accountApi = new AccountApiImpl(getApplicationContext());
 
         initViews();
 
@@ -87,14 +89,12 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         new Thread(() -> {
 
-            FintrackDatabase db =
-                    FintrackDatabase.getInstance(getApplicationContext());
-
-            accounts = db.accountDao().getAccountsByUser("u001");
+            accounts = accountApi.getAccountsByUser("u001");
 
             runOnUiThread(() -> {
 
                 if (accounts == null || accounts.isEmpty()) {
+
                     Toast.makeText(this,
                             "Chưa có ví",
                             Toast.LENGTH_LONG).show();
@@ -103,7 +103,7 @@ public class AddTransactionActivity extends AppCompatActivity {
 
                 AccountEntity acc = accounts.get(0);
 
-                selectedAccountId = acc.account_id;
+                selectedAccountId = acc.accountId;
 
                 txtAccountName.setText(acc.name);
                 txtBalance.setText("Số dư: " + df.format(acc.balance) + " đ");
@@ -115,7 +115,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                                         accounts,
                                         account -> {
 
-                                            selectedAccountId = account.account_id;
+                                            selectedAccountId = account.accountId;
 
                                             txtAccountName.setText(account.name);
 
@@ -244,7 +244,6 @@ public class AddTransactionActivity extends AppCompatActivity {
             Toast.makeText(this,
                     "Vui lòng nhập số tiền",
                     Toast.LENGTH_SHORT).show();
-
             return;
         }
 
@@ -253,7 +252,6 @@ public class AddTransactionActivity extends AppCompatActivity {
             Toast.makeText(this,
                     "Vui lòng chọn danh mục",
                     Toast.LENGTH_SHORT).show();
-
             return;
         }
 
@@ -267,12 +265,8 @@ public class AddTransactionActivity extends AppCompatActivity {
                 FintrackDatabase db =
                         FintrackDatabase.getInstance(getApplicationContext());
 
-                AccountApiImpl accountApi =
-                        new AccountApiImpl(getApplicationContext());
-
                 new AddTransactionUseCase(
                         db.transactionDao(),
-                        db.accountDao(),
                         db.alertDao(),
                         accountApi
                 ).execute(
@@ -291,8 +285,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                             "Đã thêm giao dịch",
                             Toast.LENGTH_SHORT).show();
 
-                    loadAccounts();   // reload lại dữ liệu ví từ database
-
+                    loadAccounts();
                 });
 
             } catch (Exception e) {

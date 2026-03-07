@@ -16,9 +16,11 @@
             android:exported="false" />
         <activity
             android:name=".UserService.view.ForgotPasswordActivity"
-            android:exported="false" /> <!-- 🌟 SPLASH = MÀN HÌNH ĐẦU TIÊN -->
+            android:exported="false" />
+
+
         <activity
-            android:name=".UserService.view.SplashActivity"
+            android:name=".TransactionService.view.HistoryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +28,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
         <activity
             android:name=".UserService.view.LoginActivity"
             android:exported="false" />
@@ -53,6 +57,23 @@
         <activity
             android:name=".AccountService.view.WalletTypeActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".TransactionService.view.AddTransactionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".TransactionService.view.TransferActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".TransactionService.view.CategoryManagementActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".TransactionService.view.UpdateDeleteTransactionActivity"
+            android:exported="false" />
     </application>
+
 
 </manifest>
