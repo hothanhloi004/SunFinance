@@ -26,54 +26,59 @@ public class RegisterActivity extends AppCompatActivity {
 
         edtUsername = findViewById(R.id.edtUsername);
         edtEmail = findViewById(R.id.edtEmail);
-        edtPassword = findViewById(R.id.edtPassword);
+        edtPassword = findViewById(R.id.edtPassword); // thêm
+
         btnRegister = findViewById(R.id.btnRegister);
         txtLogin = findViewById(R.id.txtLogin);
         btnBack = findViewById(R.id.btnBack);
 
         btnRegister.setOnClickListener(v -> register());
+
         btnBack.setOnClickListener(v -> finish());
         txtLogin.setOnClickListener(v -> finish());
     }
 
     private void register() {
+
         String username = edtUsername.getText().toString().trim();
         String email = edtEmail.getText().toString().trim();
-        String password = edtPassword.getText().toString();
+        String password = edtPassword.getText().toString().trim();
 
-        // 1. validate rỗng
+        // 1️⃣ Validate rỗng
         if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this,
                     "Vui lòng nhập đầy đủ thông tin",
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        // 2. Validate username ≥ 8 ký tự
+
+        // 2️⃣ Username >= 8 ký tự
         if (username.length() < 8) {
             Toast.makeText(this,
                     "Username phải tối thiểu 8 ký tự",
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        // 3. validate password >= 8, có chữ và số
-        if (!isValidPassword(password)) {
-            Toast.makeText(this,
-                    "Mật khẩu phải ≥ 8 ký tự, gồm chữ và số",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // 4. validate email
+
+        // 3️⃣ Validate email
         if (!isValidGmail(email)) {
             Toast.makeText(this,
                     "Email phải đúng định dạng @gmail.com",
                     Toast.LENGTH_SHORT).show();
             return;
         }
-        // 3. register
-        boolean success = UserRepository
-                .getInstance()
-                .register(username, email, password);
 
+        // 4️⃣ Password >= 8 ký tự và có ít nhất 1 chữ hoa
+        if (password.length() < 8 || !password.matches(".*[A-Z].*")) {
+            Toast.makeText(this,
+                    "Password phải tối thiểu 8 ký tự và có ít nhất 1 chữ viết hoa",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        UserRepository repo = new UserRepository(this);
+
+        boolean success = repo.register(email, username, password);
 
         if (!success) {
             Toast.makeText(this,
@@ -86,24 +91,9 @@ public class RegisterActivity extends AppCompatActivity {
                 "Tạo tài khoản thành công",
                 Toast.LENGTH_SHORT).show();
 
-        finish(); // quay về Login / Home (đã auto login)
+        finish();
     }
 
-    // ===== PASSWORD VALIDATION =====
-    private boolean isValidPassword(String password) {
-        if (password.length() < 8) return false;
-
-        boolean hasLetter = false;
-        boolean hasDigit = false;
-
-        for (char c : password.toCharArray()) {
-            if (Character.isLetter(c)) hasLetter = true;
-            if (Character.isDigit(c)) hasDigit = true;
-        }
-
-        return hasLetter && hasDigit;
-    }
-    // Validate email đúng dạng @gmail.com
     private boolean isValidGmail(String email) {
         return email.matches("^[A-Za-z0-9+_.-]+@gmail\\.com$");
     }

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fintrack.UserService.data.UserRepository;
-
+import com.example.fintrack.UserService.data.entity.UserEntity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,10 +32,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         txtLogin = findViewById(R.id.txtLogin);
 
         btnBack.setOnClickListener(v -> finish());
-
         txtLogin.setOnClickListener(v -> finish());
 
         btnSend.setOnClickListener(v -> {
+
             String email = edtEmail.getText().toString().trim();
 
             if (email.isEmpty()) {
@@ -43,25 +43,23 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 return;
             }
 
-            String newPassword = UserRepository
-                    .getInstance()
-                    .resetPassword(email);
+            UserRepository repo = new UserRepository(this);
 
-            if (newPassword == null) {
+            UserEntity user = repo.getUserByEmail(email);
+
+            if (user == null) {
                 Toast.makeText(this,
                         "Email không tồn tại trong hệ thống",
                         Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Notification mô phỏng
             Toast.makeText(this,
-                    "Mật khẩu mới của bạn là: " + newPassword,
+                    "Email tồn tại. Hệ thống sẽ gửi thông báo reset.",
                     Toast.LENGTH_LONG).show();
 
             finish();
         });
-
 
     }
 }

@@ -1,132 +1,95 @@
 package com.example.fintrack.UserService.data;
 
-import com.example.fintrack.UserService.entity.User;
+import android.content.Context;
+import android.content.SharedPreferences;
 
-import java.util.List;
+import com.example.fintrack.UserService.data.dao.UserDao;
+import com.example.fintrack.UserService.data.database.AppDatabase;
+import com.example.fintrack.UserService.data.entity.UserEntity;
 
 public class UserRepository {
 
-    private static UserRepository instance;
+    private final UserDao userDao;
+    private final SharedPreferences prefs;
 
-    private final List<User> users;
-    private User currentUser;
+    public UserRepository(Context context) {
 
-    // ===== LOGIN CONTROL =====
-    private int loginFailCount = 0;
-    private static final int MAX_LOGIN_FAIL = 3;
+        AppDatabase db = AppDatabase.getInstance(context);
+        userDao = db.userDao();
 
-    private UserRepository() {
-        // LOAD MOCK USERS
-        users = FakeDataProvider.getUsers();
+        prefs = context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
     }
 
-    public static UserRepository getInstance() {
-        if (instance == null) {
-            instance = new UserRepository();
-        }
-        return instance;
-    }
+    // ================= REGISTER =================
+    public boolean register(String email, String fullName, String password) {
 
-    // ===== LOGIN =====
-    public boolean login(String username, String password) {
+        UserEntity exist = userDao.getUserByEmail(email);
 
-        for (User user : users) {
-
-            if (user.getFullName().equalsIgnoreCase(username)) {
-
-                if (!user.getPassword().equals(password)) {
-                    loginFailCount++;
-                    return false;
-                }
-
-                currentUser = user;
-                loginFailCount = 0;
-                return true;
-            }
+        if (exist != null) {
+            return false;
         }
 
-        return false;
-    }
+        UserEntity user = new UserEntity();
 
+        user.user_id = String.valueOf(System.currentTimeMillis());
+        user.email = email;
+        user.full_name = fullName;
+        user.password = password;
+        user.status = "ACTIVE";
+        user.created_at = String.valueOf(System.currentTimeMillis());
 
-    // ===== CHECK LOCK =====
-    public boolean isLocked() {
-        return loginFailCount >= MAX_LOGIN_FAIL;
-    }
+        userDao.insertUser(user);
 
-    // ===== RESET PASSWORD =====
-    public String resetPassword(String email) {
-
-        for (User user : users) {
-            if (user.getEmail().equalsIgnoreCase(email)) {
-
-                String newPassword = "Abc12345";
-                user.setPassword(newPassword); // QUAN TRỌNG
-
-                loginFailCount = 0;
-                return newPassword;
-            }
-        }
-        return null;
-    }
-
-    // ===== REGISTER =====
-    public boolean register(String fullName, String email, String password) {
-
-        // 1. check email tồn tại
-        for (User user : users) {
-            if (user.getEmail().equalsIgnoreCase(email)) {
-                return false;
-            }
-        }
-
-        // 2. tạo user mới
-        User newUser = new User(
-                String.valueOf(System.currentTimeMillis()),
-                email,
-                fullName,
-                "ACTIVE"
-        );
-
-        newUser.setPassword(password);
-
-        users.add(newUser);
-
-        currentUser = newUser;
-        loginFailCount = 0;
+        saveSession(user.user_id);
 
         return true;
     }
 
+    // ================= LOGIN =================
+    public boolean login(String username, String password) {
 
+        UserEntity user = userDao.login(username, password);
 
-    public int getLoginFailCount() {
-        return loginFailCount;
+        if (user == null) {
+            return false;
+        }
+
+        saveSession(user.user_id);
+
+        return true;
     }
 
-    // ===== CURRENT USER =====
-    public User getCurrentUser() {
-        return currentUser;
+    // ================= GET USER =================
+    public UserEntity getCurrentUser() {
+
+        String userId = prefs.getString("user_id", null);
+
+        if (userId == null) return null;
+
+        return userDao.getUserById(userId);
+    }
+    // ================= GET USER BY EMAIL =================
+    public UserEntity getUserByEmail(String email) {
+        return userDao.getUserByEmail(email);
+    }
+
+    // ================= SESSION =================
+    private void saveSession(String userId) {
+
+        prefs.edit()
+                .putString("user_id", userId)
+                .apply();
     }
 
     public boolean isLoggedIn() {
-        return currentUser != null;
+        return prefs.getString("user_id", null) != null;
     }
 
-    // ===== LOGOUT =====
+    // ================= LOGOUT =================
     public void logout() {
-        currentUser = null;
-        loginFailCount = 0;
-    }
 
-
-    public void restoreSession(String email) {
-        for (User user : users) {
-            if (user.getEmail().equalsIgnoreCase(email)) {
-                currentUser = user;
-                loginFailCount = 0;
-                break;
-            }
-        }
+        prefs.edit()
+                .clear()
+                .apply();
     }
 }

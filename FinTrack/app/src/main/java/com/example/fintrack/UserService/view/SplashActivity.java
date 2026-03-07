@@ -1,7 +1,6 @@
 package com.example.fintrack.UserService.view;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.ProgressBar;
@@ -28,6 +27,7 @@ public class SplashActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+
                 progress += 5;
                 progressBar.setProgress(progress);
 
@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
                     handler.postDelayed(this, 80);
                 } else {
 
-                    checkAutoLogin();   //  THÊM DÒNG NÀY
+                    checkAutoLogin();
 
                 }
             }
@@ -44,25 +44,16 @@ public class SplashActivity extends AppCompatActivity {
 
     private void checkAutoLogin() {
 
-        SharedPreferences prefs =
-                getSharedPreferences("USER_SESSION", MODE_PRIVATE);
+        UserRepository repo = new UserRepository(this);
 
-        boolean isLoggedIn = prefs.getBoolean("isLoggedIn", false);
-        String email = prefs.getString("email", null);
+        if (repo.isLoggedIn()) {
 
-        if (isLoggedIn && email != null) {
-
-            UserRepository repo = UserRepository.getInstance();
-            repo.restoreSession(email);
-
-            if (repo.isLoggedIn()) {
-                startActivity(new Intent(this, UserAccountProfileActivity.class));
-            } else {
-                startActivity(new Intent(this, LoginActivity.class));
-            }
+            startActivity(new Intent(this, UserAccountProfileActivity.class));
 
         } else {
+
             startActivity(new Intent(this, LoginActivity.class));
+
         }
 
         finish();

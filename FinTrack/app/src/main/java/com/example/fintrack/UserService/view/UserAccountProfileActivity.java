@@ -8,13 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fintrack.UserService.data.UserRepository;
-import com.example.fintrack.UserService.entity.User;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
+import com.example.fintrack.UserService.data.UserRepository;
+import com.example.fintrack.UserService.data.entity.UserEntity;
 
 public class UserAccountProfileActivity extends AppCompatActivity {
 
@@ -47,9 +45,8 @@ public class UserAccountProfileActivity extends AppCompatActivity {
         itemDefaultCurrency = findViewById(R.id.itemDefaultCurrency);
         itemHelp = findViewById(R.id.itemHelp);
 
-        // ===== MOCK USER DATA (THEO CSDL MẪU) =====
-        loadMockUser();
-
+        // ===== LOAD USER =====
+        loadUser();
 
         // ===== EVENTS =====
         btnBack.setOnClickListener(v -> finish());
@@ -85,25 +82,28 @@ public class UserAccountProfileActivity extends AppCompatActivity {
         btnLogout.setOnClickListener(v -> logout());
     }
 
-    // ===== MOCK DATA/FAKE DATA =====
-    private void loadMockUser() {
-        User user = UserRepository.getInstance().getCurrentUser();
+    // ===== LOAD CURRENT USER =====
+    private void loadUser() {
+
+        UserRepository repo = new UserRepository(this);
+
+        UserEntity user = repo.getCurrentUser();
 
         if (user == null) {
-            finish(); // chưa login
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
             return;
         }
 
-        txtName.setText(user.getFullName());
-        txtEmail.setText(user.getEmail());
-        txtStatus.setText(user.getStatus());
+        txtName.setText(user.full_name);
+        txtEmail.setText(user.email);
+        txtStatus.setText(user.status);
     }
-
 
     // ===== LOGOUT =====
     private void logout() {
-
-        UserRepository.getInstance().logout();
 
         getSharedPreferences("USER_SESSION", MODE_PRIVATE)
                 .edit()
