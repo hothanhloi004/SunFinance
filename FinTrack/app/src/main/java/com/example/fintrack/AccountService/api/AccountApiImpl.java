@@ -5,15 +5,25 @@ import android.content.Context;
 import com.example.fintrack.AccountService.usecase.DeleteAccountUseCase;
 import com.example.fintrack.AccountService.usecase.UpdateBalanceUseCase;
 import com.example.fintrack.AccountService.usecase.GetAccountBalanceUseCase;
+import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
+import com.example.fintrack.AccountService.model.AccountEntity;
+
+import java.util.List;
 
 public class AccountApiImpl implements IAccountApi {
+
     private final DeleteAccountUseCase deleteUC = new DeleteAccountUseCase();
     private final UpdateBalanceUseCase updateBalanceUC;
     private final GetAccountBalanceUseCase getBalanceUC;
 
+    private final Context context;
+
     public AccountApiImpl(Context context) {
-        updateBalanceUC = new UpdateBalanceUseCase(context);
-        getBalanceUC = new GetAccountBalanceUseCase(context);
+
+        this.context = context.getApplicationContext();
+
+        updateBalanceUC = new UpdateBalanceUseCase(this.context);
+        getBalanceUC = new GetAccountBalanceUseCase(this.context);
     }
 
     @Override
@@ -31,4 +41,12 @@ public class AccountApiImpl implements IAccountApi {
         return getBalanceUC.execute(accountId);
     }
 
+    @Override
+    public List<AccountEntity> getAccountsByUser(String userId) {
+
+        FintrackDatabase db =
+                FintrackDatabase.getInstance(context);
+
+        return db.accountDao().getAccountsByUser(userId);
+    }
 }

@@ -3,10 +3,9 @@ package com.example.fintrack.TransactionService.view;
 import android.app.AlertDialog;
 import android.content.Context;
 
-import com.example.fintrack.TransactionService.data.entity.AccountEntity;
-
 import java.util.List;
 import java.text.DecimalFormat;
+import com.example.fintrack.AccountService.model.AccountEntity;
 public class AccountSelectDialog {
 
     public interface OnAccountSelected {

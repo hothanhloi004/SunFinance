@@ -1,6 +1,7 @@
 package com.example.fintrack.AccountService.model;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -9,9 +10,13 @@ public class AccountTypeEntity {
 
     @PrimaryKey
     @NonNull
+    @ColumnInfo(name = "type_id")
     public String typeid;
 
+    @ColumnInfo(name = "name")
     public String name;
+
+    @ColumnInfo(name = "description")
     public String description;
 
     public AccountTypeEntity(@NonNull String typeid, String name, String description) {

@@ -1,10 +1,11 @@
 package com.example.fintrack.AccountService.model;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "accounts") // Giữ lại cho Room sau này
+@Entity(tableName = "accounts")
 public class AccountEntity {
 
     public static final String STATUS_ACTIVE = "ACTIVE";
@@ -14,16 +15,25 @@ public class AccountEntity {
 
     @PrimaryKey
     @NonNull
+    @ColumnInfo(name = "account_id")
     public String accountId;
+
+    @ColumnInfo(name = "user_id")
     public String userId;
+
     public String name;
+
+    @ColumnInfo(name = "type_id")
     public String typeId;
+
     public double balance;
+
     public String status;
+
+    @ColumnInfo(name = "created_at")
     public String createdAt;
 
-    public AccountEntity() {
-    }
+    public AccountEntity() {}
 
     public AccountEntity(@NonNull String accountId, String userId, String name, String typeId, double balance) {
         this.accountId = accountId;

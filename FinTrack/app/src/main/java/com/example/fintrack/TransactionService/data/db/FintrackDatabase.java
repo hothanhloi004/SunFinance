@@ -8,14 +8,13 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.example.fintrack.TransactionService.data.dao.AccountDao;
 import com.example.fintrack.TransactionService.data.dao.AlertDao;
 import com.example.fintrack.TransactionService.data.dao.CategoryDao;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.*;
-import androidx.sqlite.db.SupportSQLiteDatabase;
-import androidx.room.RoomDatabase.Callback;
-import androidx.annotation.NonNull;
+import com.example.fintrack.AccountService.data.AccountDao;
+import com.example.fintrack.AccountService.model.AccountEntity;
+import com.example.fintrack.AccountService.model.AccountTypeEntity;
 
 @Database(
         entities = {
@@ -27,7 +26,7 @@ import androidx.annotation.NonNull;
                 UserEntity.class,
                 AccountTypeEntity.class
         },
-        version = 11, //  TĂNG VERSION
+        version = 11,
         exportSchema = false
 )
 public abstract class FintrackDatabase extends RoomDatabase {
