@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- User Service -->
+
+    <!-- Login -->
+    <string name="login">ログイン</string>
+    <string name="welcome_back">お帰りなさい</string>
+    <string name="manage_wealth">VND資産を簡単に管理しましょう</string>
+    <string name="username">ユーザー名</string>
+    <string name="enter_username">ユーザー名を入力してください</string>
+    <string name="password">パスワード</string>
+    <string name="enter_password">パスワードを入力してください</string>
+    <string name="forgot_password">パスワードをお忘れですか？</string>
+    <string name="sign_in">サインイン</string>
+    <string name="biometric_login">生体認証ログイン</string>
+    <string name="use_faceid">FaceIDでログイン</string>
+    <string name="no_account_register">アカウントをお持ちでないですか？登録</string>
+
+    <!-- Register -->
+    <string name="create_account">アカウント作成</string>
+    <string name="welcome_sunfinance">SunFinanceへ\nようこそ</string>
+    <string name="plan_future">VNDで将来の計画を簡単に立てましょう。</string>
+
+    <string name="gmail">Gmail</string>
+    <string name="email_hint">yourname@gmail.com</string>
+
+    <string name="create_password">パスワードを作成</string>
+    <string name="password_rule">英数字8文字以上で入力してください。</string>
+
+    <string name="already_have_account">すでにアカウントをお持ちですか？ログイン</string>
+
+    <!-- Forgot password -->
+    <string name="reset_password">パスワードをリセット</string>
+
+    <string name="reset_password_desc">
+SunFinanceアカウントのパスワードをリセットするため、登録したメールアドレスを入力してください。
+</string>
+
+    <string name="email_address">メールアドレス</string>
+
+    <string name="email_hint_general">name@example.com</string>
+
+    <string name="send_reset_link">リセットリンクを送信</string>
+
+    <string name="remember_password_login">パスワードを思い出しましたか？ログイン</string>
+
+    <!-- User account profile -->
+    <string name="profile_title">SunFinanceプロフィール</string>
+
+    <string name="premium_member">プレミアムメンバー</string>
+
+    <string name="account_settings">アカウント設定</string>
+    <string name="personal_info">個人情報</string>
+    <string name="security_settings">セキュリティ設定</string>
+    <string name="language">言語</string>
+
+    <string name="preferences">設定</string>
+    <string name="notifications">通知</string>
+    <string name="default_currency">デフォルト通貨</string>
+
+    <string name="support">サポート</string>
+    <string name="help_center">ヘルプセンター</string>
+
+    <string name="logout">ログアウト</string>
+
+    <string name="app_version">バージョン 2.4.0 (Build 1204)</string>
+
+    <!-- Personal Info -->
+    <string name="email">メール</string>
+    <string name="status">ステータス</string>
+
+    <string name="enter_new_username">新しいユーザー名を入力</string>
+
+    <string name="new_password">新しいパスワード</string>
+    <string name="enter_new_password">新しいパスワードを入力</string>
+
+    <string name="update_info">情報を更新</string>
+    <string name="cancel">キャンセル</string>
+
+    <!-- Language -->
+    <string name="system_language_applied">システム言語を適用しました</string>
+    <string name="vietnamese_applied">ベトナム語が適用されました</string>
+    <string name="english_applied">英語が適用されました</string>
+    <string name="japanese_applied">日本語が適用されました</string>
+
+    <string name="suggested">おすすめ</string>
+    <string name="all_languages">すべての言語</string>
+
+    <string name="system_default">システムのデフォルト</string>
+
+    <string name="english">英語</string>
+    <string name="vietnamese">ベトナム語</string>
+    <string name="japanese">日本語</string>
+</resources>

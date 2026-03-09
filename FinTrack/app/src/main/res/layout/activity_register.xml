@@ -20,7 +20,7 @@
 
         <!-- Title -->
         <TextView
-            android:text="Create Account"
+            android:text="@string/create_account"
             android:textSize="16sp"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="Welcome to\nSunFinance"
+            android:text="@string/welcome_sunfinance"
             android:textSize="26sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:text="Plan your future in VND with ease."
+            android:text="@string/plan_future"
             android:textColor="#777777"
             android:layout_marginTop="8dp"
             android:layout_gravity="center"
@@ -47,7 +47,7 @@
 
         <!-- Username -->
         <TextView
-            android:text="Username"
+            android:text="@string/username"
             android:layout_marginTop="24dp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
 
         <EditText
             android:id="@+id/edtUsername"
-            android:hint="Enter your username"
+            android:hint="@string/enter_username"
             android:background="@android:drawable/edit_text"
             android:padding="12dp"
             android:layout_width="match_parent"
@@ -63,7 +63,7 @@
 
         <!-- Gmail -->
         <TextView
-            android:text="Gmail"
+            android:text="@string/gmail"
             android:layout_marginTop="16dp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
 
         <EditText
             android:id="@+id/edtEmail"
-            android:hint="yourname@gmail.com"
+            android:hint="@string/email_hint"
             android:inputType="textEmailAddress"
             android:background="@android:drawable/edit_text"
             android:padding="12dp"
@@ -80,7 +80,7 @@
 
         <!-- Password -->
         <TextView
-            android:text="Password"
+            android:text="@string/password"
             android:layout_marginTop="16dp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -88,15 +88,15 @@
 
         <EditText
             android:id="@+id/edtPassword"
-            android:hint="Create a password"
-            android:inputType="textPassword"
+            android:hint="@string/create_password"
+            android:inputType="text"
             android:background="@android:drawable/edit_text"
             android:padding="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="Must be at least 8 alphanumeric characters."
+            android:text="@string/password_rule"
             android:textSize="12sp"
             android:textColor="#999999"
             android:layout_marginTop="4dp"
@@ -106,7 +106,7 @@
         <!-- Button -->
         <Button
             android:id="@+id/btnRegister"
-            android:text="Create Account"
+            android:text="@string/create_account"
             android:backgroundTint="#FFD600"
             android:textColor="#000000"
             android:textStyle="bold"
@@ -117,7 +117,7 @@
         <!-- Login -->
         <TextView
             android:id="@+id/txtLogin"
-            android:text="Already have an account? Login"
+            android:text="@string/already_have_account"
             android:textSize="13sp"
             android:gravity="center"
             android:layout_marginTop="16dp"

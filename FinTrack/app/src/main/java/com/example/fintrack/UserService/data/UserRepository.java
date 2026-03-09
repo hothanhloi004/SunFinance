@@ -35,7 +35,7 @@ public class UserRepository {
         user.email = email;
         user.full_name = fullName;
         user.password = password;
-        user.status = "ACTIVE";
+        user.status = "Standard Member";
         user.created_at = String.valueOf(System.currentTimeMillis());
 
         userDao.insertUser(user);
@@ -57,6 +57,21 @@ public class UserRepository {
         saveSession(user.user_id);
 
         return true;
+    }
+
+    // ================= UPDATE USER =================
+    public void updateUser(String userId, String username, String password, String avatar) {
+        userDao.updateUser(userId, username, password, avatar);
+    }
+
+    // ================= UPDATE LANGUAGE =================
+    public void updateLanguage(String language){
+
+        String userId = prefs.getString("user_id", null);
+
+        if(userId != null){
+            userDao.updateLanguage(userId, language);
+        }
     }
 
     // ================= GET USER =================

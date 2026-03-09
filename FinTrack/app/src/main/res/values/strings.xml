@@ -1,9 +1,97 @@
 <resources>
     <string name="app_name">FinTrack</string>
 
-    <!-- Transaction Service -->
+    //Transaction Service
     <string name="expense">Expense</string>
     <string name="income">Income</string>
     <string name="add_category">+ Thêm danh mục</string>
 
+  //User Service
+    //Login
+    <string name="login">Login</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="manage_wealth">Manage your VND wealth easily</string>
+    <string name="username">Username</string>
+    <string name="enter_username">Enter your username</string>
+    <string name="password">Password</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="biometric_login">BIOMETRIC LOGIN</string>
+    <string name="use_faceid">Use FaceID to Login</string>
+    <string name="no_account_register">Don\'t have an account? Sign up</string>
+
+    //Register
+    <string name="create_account">Create Account</string>
+    <string name="welcome_sunfinance">Welcome to\nSunFinance</string>
+    <string name="plan_future">Plan your future in VND with ease.</string>
+
+    <string name="gmail">Gmail</string>
+    <string name="email_hint">yourname@gmail.com</string>
+
+    <string name="create_password">Create a password</string>
+    <string name="password_rule">Must be at least 8 alphanumeric characters.</string>
+
+    <string name="already_have_account">Already have an account? Login</string>
+
+    //Forgot_pass
+    <string name="reset_password">Reset Password</string>
+
+    <string name="reset_password_desc">Enter your registered email below to receive a reset link for your SunFinance account.</string>
+
+    <string name="email_address">Email Address</string>
+
+    <string name="email_hint_general">name@example.com</string>
+
+    <string name="send_reset_link">Send Reset Link</string>
+
+    <string name="remember_password_login">Remembered your password? Log In</string>
+
+    //User_account_profile
+    <string name="profile_title">SunFinance Profile</string>
+
+    <string name="premium_member">PREMIUM MEMBER</string>
+
+    <string name="account_settings">ACCOUNT SETTINGS</string>
+    <string name="personal_info">Personal Info</string>
+    <string name="security_settings">Security Settings</string>
+    <string name="language">Language</string>
+
+    <string name="preferences">PREFERENCES</string>
+    <string name="notifications">Notifications</string>
+    <string name="default_currency">Default Currency</string>
+
+    <string name="support">SUPPORT</string>
+    <string name="help_center">Help Center</string>
+
+    <string name="logout">Logout</string>
+
+    <string name="app_version">Version 2.4.0 (Build 1204)</string>
+
+    // Personal_Info
+    <string name="email">Email</string>
+    <string name="status">Status</string>
+
+    <string name="enter_new_username">Enter new username</string>
+
+    <string name="new_password">New Password</string>
+    <string name="enter_new_password">Enter new password</string>
+
+    <string name="update_info">Update Info</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Language -->
+    <string name="system_language_applied">Applied system language</string>
+    <string name="vietnamese_applied">Vietnamese applied</string>
+    <string name="english_applied">Language set to English</string>
+    <string name="japanese_applied">Japanese applied</string>
+
+    <string name="suggested">Suggested</string>
+    <string name="all_languages">All Languages</string>
+
+    <string name="system_default">System Default</string>
+
+    <string name="english">English</string>
+    <string name="vietnamese">Vietnamese</string>
+    <string name="japanese">Japanese</string>
 </resources>

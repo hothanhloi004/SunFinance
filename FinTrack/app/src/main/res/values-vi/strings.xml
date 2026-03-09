@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- User Service -->
+
+    <!-- Login -->
+    <string name="login">Đăng nhập</string>
+    <string name="welcome_back">Chào mừng quay lại</string>
+    <string name="manage_wealth">Quản lý tài chính VND của bạn dễ dàng</string>
+    <string name="username">Tên người dùng</string>
+    <string name="enter_username">Nhập tên người dùng</string>
+    <string name="password">Mật khẩu</string>
+    <string name="enter_password">Nhập mật khẩu</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="sign_in">Đăng nhập</string>
+    <string name="biometric_login">ĐĂNG NHẬP SINH TRẮC HỌC</string>
+    <string name="use_faceid">Sử dụng FaceID để đăng nhập</string>
+    <string name="no_account_register">Chưa có tài khoản? Đăng ký</string>
+
+    <!-- Register -->
+    <string name="create_account">Tạo tài khoản</string>
+    <string name="welcome_sunfinance">Chào mừng đến\nSunFinance</string>
+    <string name="plan_future">Lên kế hoạch tài chính VND của bạn một cách dễ dàng.</string>
+
+    <string name="gmail">Gmail</string>
+    <string name="email_hint">tenban@gmail.com</string>
+
+    <string name="create_password">Tạo mật khẩu</string>
+    <string name="password_rule">Phải có ít nhất 8 ký tự chữ và số.</string>
+
+    <string name="already_have_account">Đã có tài khoản? Đăng nhập</string>
+
+    <!-- Forgot password -->
+    <string name="reset_password">Đặt lại mật khẩu</string>
+
+    <string name="reset_password_desc">
+Nhập email đã đăng ký bên dưới để nhận liên kết đặt lại mật khẩu cho tài khoản SunFinance của bạn.
+</string>
+
+    <string name="email_address">Địa chỉ Email</string>
+
+    <string name="email_hint_general">ten@example.com</string>
+
+    <string name="send_reset_link">Gửi liên kết đặt lại</string>
+
+    <string name="remember_password_login">Đã nhớ mật khẩu? Đăng nhập</string>
+
+    <!-- User account profile -->
+    <string name="profile_title">Hồ sơ SunFinance</string>
+
+    <string name="premium_member">THÀNH VIÊN CAO CẤP</string>
+
+    <string name="account_settings">CÀI ĐẶT TÀI KHOẢN</string>
+    <string name="personal_info">Thông tin cá nhân</string>
+    <string name="security_settings">Cài đặt bảo mật</string>
+    <string name="language">Ngôn ngữ</string>
+
+    <string name="preferences">TÙY CHỌN</string>
+    <string name="notifications">Thông báo</string>
+    <string name="default_currency">Tiền tệ mặc định</string>
+
+    <string name="support">HỖ TRỢ</string>
+    <string name="help_center">Trung tâm trợ giúp</string>
+
+    <string name="logout">Đăng xuất</string>
+
+    <string name="app_version">Phiên bản 2.4.0 (Build 1204)</string>
+
+    <!-- Personal Info -->
+    <string name="email">Email</string>
+    <string name="status">Trạng thái</string>
+
+    <string name="enter_new_username">Nhập tên người dùng mới</string>
+
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="enter_new_password">Nhập mật khẩu mới</string>
+
+    <string name="update_info">Cập nhật thông tin</string>
+    <string name="cancel">Hủy</string>
+
+    <string name="system_language_applied">Áp dụng ngôn ngữ hệ thống</string>
+    <string name="vietnamese_applied">Đã áp dụng Tiếng Việt</string>
+    <string name="english_applied">Đã áp dụng Tiếng Anh</string>
+    <string name="japanese_applied">Đã áp dụng Tiếng Nhật</string>    <!-- Language -->
+
+
+    <string name="suggested">Đề xuất</string>
+    <string name="all_languages">Tất cả ngôn ngữ</string>
+
+    <string name="system_default">Mặc định hệ thống</string>
+
+    <string name="english">Tiếng Anh</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="japanese">Tiếng Nhật</string>
+</resources>

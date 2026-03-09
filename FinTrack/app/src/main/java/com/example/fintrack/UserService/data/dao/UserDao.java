@@ -23,4 +23,11 @@ public interface UserDao {
     // tìm theo user_id
     @Query("SELECT * FROM users WHERE user_id = :userId LIMIT 1")
     UserEntity getUserById(String userId);
+
+    // phần cập nhat thông tin người dùng với 2 phần thuộc tính tự thêm đó là mk và avatar
+    @Query("UPDATE users SET full_name = :username, password = :password, avatar = :avatar WHERE user_id = :userId")
+    void updateUser(String userId, String username, String password, String avatar);
+
+    @Query("UPDATE users SET language = :language WHERE user_id = :userId")
+    void updateLanguage(String userId, String language);
 }

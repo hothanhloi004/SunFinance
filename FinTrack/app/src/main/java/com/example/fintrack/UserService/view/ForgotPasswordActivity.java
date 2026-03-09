@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.fintrack.UserService.data.UserRepository;
 import com.example.fintrack.UserService.data.entity.UserEntity;
+import com.example.fintrack.UserService.util.LocaleHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +24,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        LocaleHelper.applyLanguage(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 

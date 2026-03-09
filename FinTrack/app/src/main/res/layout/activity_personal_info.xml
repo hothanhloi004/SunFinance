@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F5F6FA"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <!-- HEADER -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:src="@drawable/ic_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerVertical="true"
+                android:clickable="true"/>
+
+            <TextView
+                android:text="@string/personal_info"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <!-- PROFILE -->
+        <ImageView
+            android:id="@+id/imgAvatar"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/avatar"
+            android:scaleType="centerCrop"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <!-- CARD INFO -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- EMAIL -->
+                <TextView
+                    android:text="@string/email"
+                    android:textStyle="bold"
+                    android:textColor="#555"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"/>
+
+                <!-- STATUS -->
+                <TextView
+                    android:text="@string/status"
+                    android:textStyle="bold"
+                    android:textColor="#555"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/etStatus"
+                    android:enabled="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"/>
+
+                <!-- USERNAME -->
+                <TextView
+                    android:text="@string/username"
+                    android:textStyle="bold"
+                    android:textColor="#555"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/etUsername"
+                    android:hint="@string/enter_new_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"/>
+
+                <!-- PASSWORD -->
+                <TextView
+                    android:text="@string/new_password"
+                    android:textStyle="bold"
+                    android:textColor="#555"
+                    android:layout_marginTop="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_new_password"
+                    android:inputType="text"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- BUTTONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/btnUpdate"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:text="@string/update_info"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#2ECC71"/>
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="@string/cancel"
+                android:textColor="@android:color/white"
+                android:backgroundTint="#E74C3C"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
