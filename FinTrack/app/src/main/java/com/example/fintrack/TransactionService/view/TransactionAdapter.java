@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fintrack.R;
@@ -70,26 +69,34 @@ public class TransactionAdapter
         TransactionEntity tx = item.tx;
         TxVH vh = (TxVH) h;
 
-        // ===== ICON =====
+        // ===== ICON (giữ logic nhóm) =====
         String icon = "📌";
         if ("FOOD".equals(tx.category_id)) icon = "🛒";
         else if ("SALARY".equals(tx.category_id)) icon = "💰";
         else if ("TRANSFER".equals(tx.tx_type_id)) icon = "🔁";
 
         vh.txtIcon.setText(icon);
-        vh.txtName.setText(tx.note);
+
+        // ===== GỘP LOGIC CODE CỦA BẠN =====
+        // title
+        vh.txtName.setText(tx.note == null ? "No note" : tx.note);
+
+        // date
         vh.txtDate.setText(tx.tx_date);
 
+        // amount
         boolean isExpense = "EXPENSE".equals(tx.tx_type_id);
+
         vh.txtAmount.setText(
                 (isExpense ? "-" : "+") +
-                        String.format("%,.0f", tx.amount) + " VND"
+                        String.format("%,.0f", tx.amount)
         );
+
         vh.txtAmount.setTextColor(
                 isExpense ? Color.RED : Color.parseColor("#2E7D32")
         );
 
-        // ✏️ CHỈ BẤM EDIT ICON MỚI HIỆN BOTTOM SHEET
+        // ===== EDIT BUTTON =====
         vh.btnEdit.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onEdit(tx);
@@ -103,8 +110,10 @@ public class TransactionAdapter
     }
 
     // ===== VIEW HOLDERS =====
+
     static class HeaderVH extends RecyclerView.ViewHolder {
         TextView txtHeader;
+
         HeaderVH(View v) {
             super(v);
             txtHeader = v.findViewById(R.id.txtHeader);
@@ -112,14 +121,17 @@ public class TransactionAdapter
     }
 
     static class TxVH extends RecyclerView.ViewHolder {
+
         TextView txtIcon, txtName, txtDate, txtAmount, btnEdit;
+
         TxVH(View v) {
             super(v);
+
             txtIcon = v.findViewById(R.id.txtIcon);
             txtName = v.findViewById(R.id.txtName);
             txtDate = v.findViewById(R.id.txtDate);
             txtAmount = v.findViewById(R.id.txtAmount);
-            btnEdit = v.findViewById(R.id.btnEdit); // ✏️
+            btnEdit = v.findViewById(R.id.btnEdit);
         }
     }
 }
