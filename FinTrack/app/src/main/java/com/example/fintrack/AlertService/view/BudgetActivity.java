@@ -95,7 +95,6 @@ public class BudgetActivity extends AppCompatActivity {
     }
 
     private void loadSpentData() {
-
         new Thread(() -> {
 
             FintrackDatabase db =
