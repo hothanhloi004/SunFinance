@@ -26,7 +26,7 @@ import com.example.fintrack.AccountService.model.AccountTypeEntity;
                 UserEntity.class,
                 AccountTypeEntity.class
         },
-        version = 11,
+        version = 12,
         exportSchema = false
 )
 public abstract class FintrackDatabase extends RoomDatabase {
