@@ -70,4 +70,51 @@ public interface TransactionDao {
             String fromDate,
             String toDate
     );
+    // ===== GET ALL BY USER =====
+    @Query(
+            "SELECT * FROM transactions " +
+                    "WHERE user_id = :userId " +
+                    "ORDER BY tx_date DESC, created_at DESC"
+    )
+    List<TransactionEntity> getAllByUser(String userId);
+
+
+    // ===== GET BY ACCOUNT =====
+    @Query(
+            "SELECT * FROM transactions " +
+                    "WHERE source_account_id = :accountId " +
+                    "OR target_account_id = :accountId " +
+                    "ORDER BY tx_date DESC, created_at DESC"
+    )
+    List<TransactionEntity> getByAccount(String accountId);
+
+
+    // ===== GET BY MONTH =====
+    @Query(
+            "SELECT * FROM transactions " +
+                    "WHERE user_id = :userId " +
+                    "AND month = :month " +
+                    "ORDER BY tx_date DESC"
+    )
+    List<TransactionEntity> getByMonth(String userId, String month);
+
+
+    // ===== TOTAL EXPENSE =====
+    @Query(
+            "SELECT SUM(amount) FROM transactions " +
+                    "WHERE user_id = :userId " +
+                    "AND tx_type_id = 'EXPENSE' " +
+                    "AND month = :month"
+    )
+    Double getTotalExpense(String userId, String month);
+
+
+    // ===== TOTAL INCOME =====
+    @Query(
+            "SELECT SUM(amount) FROM transactions " +
+                    "WHERE user_id = :userId " +
+                    "AND tx_type_id = 'INCOME' " +
+                    "AND month = :month"
+    )
+    Double getTotalIncome(String userId, String month);
 }

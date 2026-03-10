@@ -2,6 +2,7 @@ package com.example.fintrack.AccountService.api;
 
 import android.content.Context;
 
+import com.example.fintrack.AccountService.port.AccountPort;
 import com.example.fintrack.AccountService.usecase.DeleteAccountUseCase;
 import com.example.fintrack.AccountService.usecase.UpdateBalanceUseCase;
 import com.example.fintrack.AccountService.usecase.GetAccountBalanceUseCase;
@@ -10,7 +11,7 @@ import com.example.fintrack.AccountService.model.AccountEntity;
 
 import java.util.List;
 
-public class AccountApiImpl implements IAccountApi {
+public class AccountApiImpl implements AccountPort {
 
     private final DeleteAccountUseCase deleteUC = new DeleteAccountUseCase();
     private final UpdateBalanceUseCase updateBalanceUC;

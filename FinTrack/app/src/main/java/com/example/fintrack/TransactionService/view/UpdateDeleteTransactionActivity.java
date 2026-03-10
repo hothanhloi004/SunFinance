@@ -14,7 +14,7 @@ import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
 import com.example.fintrack.TransactionService.domain.usecase.DeleteTransactionUseCase;
 import com.example.fintrack.TransactionService.domain.usecase.UpdateTransactionUseCase;
 import com.example.fintrack.AccountService.api.AccountApiImpl;
-import com.example.fintrack.AccountService.api.IAccountApi;
+
 public class UpdateDeleteTransactionActivity extends AppCompatActivity {
 
     private String txId;

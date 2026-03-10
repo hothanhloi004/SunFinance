@@ -1,8 +1,8 @@
-package com.example.fintrack.AccountService.api;
+package com.example.fintrack.AccountService.port;
 
 import java.util.List;
 import com.example.fintrack.AccountService.model.AccountEntity;
-public interface IAccountApi {
+public interface AccountPort {
 
     double getBalance(String accountId);
 

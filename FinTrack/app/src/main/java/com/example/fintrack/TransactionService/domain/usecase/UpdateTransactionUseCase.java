@@ -1,6 +1,6 @@
 package com.example.fintrack.TransactionService.domain.usecase;
 
-import com.example.fintrack.AccountService.api.IAccountApi;
+import com.example.fintrack.AccountService.port.AccountPort;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 
@@ -9,14 +9,14 @@ import androidx.room.Transaction;
 public class UpdateTransactionUseCase {
 
     private final TransactionDao transactionDao;
-    private final IAccountApi accountApi;
+    private final AccountPort accountPort;
 
     public UpdateTransactionUseCase(
             TransactionDao transactionDao,
-            IAccountApi accountApi
+            AccountPort accountPort
     ) {
         this.transactionDao = transactionDao;
-        this.accountApi = accountApi;
+        this.accountPort = accountPort;
     }
 
     @Transaction
@@ -40,36 +40,36 @@ public class UpdateTransactionUseCase {
 
         if ("INCOME".equals(oldTx.tx_type_id)) {
 
-            accountApi.updateBalance(oldTx.target_account_id, -oldTx.amount);
+            accountPort.updateBalance(oldTx.target_account_id, -oldTx.amount);
 
         }
         else if ("EXPENSE".equals(oldTx.tx_type_id)) {
 
-            accountApi.updateBalance(oldTx.source_account_id, oldTx.amount);
+            accountPort.updateBalance(oldTx.source_account_id, oldTx.amount);
 
         }
         else if ("TRANSFER".equals(oldTx.tx_type_id)) {
 
-            accountApi.updateBalance(oldTx.source_account_id, oldTx.amount);
-            accountApi.updateBalance(oldTx.target_account_id, -oldTx.amount);
+            accountPort.updateBalance(oldTx.source_account_id, oldTx.amount);
+            accountPort.updateBalance(oldTx.target_account_id, -oldTx.amount);
         }
 
         // ===== APPLY NEW =====
 
         if ("INCOME".equals(newTxTypeId)) {
 
-            accountApi.updateBalance(newAccountId, newAmount);
+            accountPort.updateBalance(newAccountId, newAmount);
 
         }
         else if ("EXPENSE".equals(newTxTypeId)) {
 
-            accountApi.updateBalance(newAccountId, -newAmount);
+            accountPort.updateBalance(newAccountId, -newAmount);
 
         }
         else if ("TRANSFER".equals(newTxTypeId)) {
 
-            accountApi.updateBalance(oldTx.source_account_id, -newAmount);
-            accountApi.updateBalance(oldTx.target_account_id, newAmount);
+            accountPort.updateBalance(oldTx.source_account_id, -newAmount);
+            accountPort.updateBalance(oldTx.target_account_id, newAmount);
         }
 
         // ===== UPDATE ENTITY =====

@@ -5,7 +5,7 @@ import androidx.room.Transaction;
 import com.example.fintrack.TransactionService.data.dao.AlertDao;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
-import com.example.fintrack.AccountService.api.IAccountApi;
+import com.example.fintrack.AccountService.port.AccountPort;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,16 +15,16 @@ public class AddTransactionUseCase {
 
     private final TransactionDao transactionDao;
     private final AlertDao alertDao;
-    private final IAccountApi accountApi;
+    private final AccountPort accountPort;
 
     public AddTransactionUseCase(
             TransactionDao transactionDao,
             AlertDao alertDao,
-            IAccountApi accountApi
+            AccountPort accountPort
     ) {
         this.transactionDao = transactionDao;
         this.alertDao = alertDao;
-        this.accountApi = accountApi;
+        this.accountPort = accountPort;
     }
 
     @Transaction
@@ -59,7 +59,7 @@ public class AddTransactionUseCase {
         double balanceChange =
                 "INCOME".equals(txTypeId) ? amount : -amount;
 
-        accountApi.updateBalance(accountId, balanceChange);
+        accountPort.updateBalance(accountId, balanceChange);
 
         // ===== CREATE TRANSACTION =====
         TransactionEntity tx = new TransactionEntity();

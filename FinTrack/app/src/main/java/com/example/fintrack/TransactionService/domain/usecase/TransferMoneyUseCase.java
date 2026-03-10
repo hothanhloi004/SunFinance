@@ -2,7 +2,7 @@ package com.example.fintrack.TransactionService.domain.usecase;
 
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
-import com.example.fintrack.AccountService.api.IAccountApi;
+import com.example.fintrack.AccountService.port.AccountPort;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,14 +11,14 @@ import java.util.UUID;
 public class TransferMoneyUseCase {
 
     private final TransactionDao transactionDao;
-    private final IAccountApi accountApi;
+    private final AccountPort accountPort;
 
     public TransferMoneyUseCase(
             TransactionDao transactionDao,
-            IAccountApi accountApi
+            AccountPort accountPort
     ) {
         this.transactionDao = transactionDao;
-        this.accountApi = accountApi;
+        this.accountPort = accountPort;
     }
 
     public void execute(
@@ -40,14 +40,14 @@ public class TransferMoneyUseCase {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be > 0");
         }
-        double sourceBalance = accountApi.getBalance(sourceAccountId);
+        double sourceBalance = accountPort.getBalance(sourceAccountId);
 
         if (sourceBalance < amount) {
             throw new IllegalArgumentException("Không đủ số dư");
         }
         // cập nhật số dư thông qua AccountService
-        accountApi.updateBalance(sourceAccountId, -amount);
-        accountApi.updateBalance(targetAccountId, amount);
+        accountPort.updateBalance(sourceAccountId, -amount);
+        accountPort.updateBalance(targetAccountId, amount);
 
         // tạo transaction
         TransactionEntity tx = new TransactionEntity();
