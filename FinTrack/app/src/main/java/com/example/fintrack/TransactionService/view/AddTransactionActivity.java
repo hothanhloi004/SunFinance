@@ -266,6 +266,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                         FintrackDatabase.getInstance(getApplicationContext());
 
                 new AddTransactionUseCase(
+                        getApplicationContext(),
                         db.transactionDao(),
                         db.alertDao(),
                         accountApi

@@ -12,13 +12,21 @@ public class CreateBudgetUseCase {
         this.repo = repo;
     }
 
-    public void execute(String category,
+    public void execute(String categoryId,
+                        String categoryName,
                         double limit,
                         String period) {
+        for(BudgetAlert a : repo.findAll()){
+            if(a.categoryId.equals(categoryId)){
+                a.limitAmount = limit;
+                return;
+            }
+        }
 
         BudgetAlert alert = new BudgetAlert(
                 IdGenerator.generate(),
-                category,
+                categoryId,
+                categoryName,
                 limit,
                 0.0,
                 period,
@@ -26,6 +34,6 @@ public class CreateBudgetUseCase {
                 false
         );
 
-        repo.add(alert);   // sửa ở đây
+        repo.add(alert);
     }
 }

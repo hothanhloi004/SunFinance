@@ -8,9 +8,18 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
+import com.example.fintrack.AlertService.data.AlertRepository;
+import com.example.fintrack.AlertService.usecase.CreateBudgetUseCase;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
+import com.example.fintrack.TransactionService.data.entity.CategoryEntity;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.fintrack.AlertService.entity.BudgetAlert;
+import com.example.fintrack.AlertService.view.BudgetAdapter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class BudgetActivity extends AppCompatActivity {
@@ -20,20 +29,15 @@ public class BudgetActivity extends AppCompatActivity {
     private CheckBox cbNotify;
     private Button btnCreate;
 
-    private TextView tvDiningAmount, tvDiningWarning;
-    private ProgressBar pbDining;
-
-    private TextView tvShoppingAmount, tvShoppingWarning;
-    private ProgressBar pbShopping;
-
-    private TextView tvTransportAmount, tvTransportWarning;
-    private ProgressBar pbTransport;
 
     private TextView tvTotalSpent;
 
-    private double spentDining = 0;
-    private double spentShopping = 0;
-    private double spentTransport = 0;
+
+
+    private List<CategoryEntity> categoryList = new ArrayList<>();
+    RecyclerView rvBudgets;
+    BudgetAdapter adapter;
+    AlertRepository repo = AlertRepository.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +46,9 @@ public class BudgetActivity extends AppCompatActivity {
 
         initViews();
         initSpinners();
-        loadSpentData();
+
         setupCreateButton();
+        loadBudgets();
     }
 
     private void initViews() {
@@ -53,36 +58,41 @@ public class BudgetActivity extends AppCompatActivity {
         etAmount = findViewById(R.id.etAmount);
         cbNotify = findViewById(R.id.cbNotify);
         btnCreate = findViewById(R.id.btnCreate);
-
-        tvDiningAmount = findViewById(R.id.tvDiningAmount);
-        tvDiningWarning = findViewById(R.id.tvDiningWarning);
-        pbDining = findViewById(R.id.pbDining);
-
-        tvShoppingAmount = findViewById(R.id.tvShoppingAmount);
-        tvShoppingWarning = findViewById(R.id.tvShoppingWarning);
-        pbShopping = findViewById(R.id.pbShopping);
-
-        tvTransportAmount = findViewById(R.id.tvTransportAmount);
-        tvTransportWarning = findViewById(R.id.tvTransportWarning);
-        pbTransport = findViewById(R.id.pbTransport);
+        rvBudgets = findViewById(R.id.rvBudgets);
+        rvBudgets.setLayoutManager(new LinearLayoutManager(this));
 
         tvTotalSpent = findViewById(R.id.tvTotalSpent);
 
-        pbDining.setMax(100);
-        pbShopping.setMax(100);
-        pbTransport.setMax(100);
     }
 
     private void initSpinners() {
 
-        String[] categories = {"Dining", "Shopping", "Transport"};
+        new Thread(() -> {
 
-        ArrayAdapter<String> categoryAdapter =
-                new ArrayAdapter<>(this,
-                        android.R.layout.simple_spinner_dropdown_item,
-                        categories);
+            FintrackDatabase db =
+                    FintrackDatabase.getInstance(getApplicationContext());
 
-        spCategory.setAdapter(categoryAdapter);
+            categoryList = db.categoryDao().getAll("u001");
+
+            List<String> names = new ArrayList<>();
+
+            for (CategoryEntity c : categoryList) {
+                names.add(c.name);
+            }
+
+            runOnUiThread(() -> {
+
+                ArrayAdapter<String> adapter =
+                        new ArrayAdapter<>(this,
+                                android.R.layout.simple_spinner_dropdown_item,
+                                names);
+
+                spCategory.setAdapter(adapter);
+
+            });
+
+        }).start();
+
 
         String[] periods = {"Daily", "Weekly", "Monthly"};
 
@@ -94,58 +104,9 @@ public class BudgetActivity extends AppCompatActivity {
         spPeriod.setAdapter(periodAdapter);
     }
 
-    private void loadSpentData() {
-        new Thread(() -> {
 
-            FintrackDatabase db =
-                    FintrackDatabase.getInstance(getApplicationContext());
 
-            List<TransactionEntity> list =
-                    db.transactionDao().getAll();
 
-            double totalSpent = 0;
-
-            for (TransactionEntity t : list) {
-
-                if (!"EXPENSE".equals(t.tx_type_id))
-                    continue;
-
-                totalSpent += t.amount;
-
-                if ("FOOD".equals(t.category_id))
-                    spentDining += t.amount;
-
-                else if ("SHOPPING".equals(t.category_id))
-                    spentShopping += t.amount;
-
-                else if ("MOVE".equals(t.category_id))
-                    spentTransport += t.amount;
-            }
-
-            double finalTotal = totalSpent;
-
-            runOnUiThread(() -> {
-
-                tvTotalSpent.setText(
-                        String.format("%,.0f VND", finalTotal)
-                );
-
-                initDefaultData();
-            });
-
-        }).start();
-    }
-
-    private void initDefaultData() {
-
-        tvDiningAmount.setText(String.format("%,.0f VND spent", spentDining));
-        tvShoppingAmount.setText(String.format("%,.0f VND spent", spentShopping));
-        tvTransportAmount.setText(String.format("%,.0f VND spent", spentTransport));
-
-        pbDining.setProgress(0);
-        pbShopping.setProgress(0);
-        pbTransport.setProgress(0);
-    }
 
     private void setupCreateButton() {
 
@@ -154,85 +115,83 @@ public class BudgetActivity extends AppCompatActivity {
             String amountStr = etAmount.getText().toString().trim();
 
             if (amountStr.isEmpty()) {
-                Toast.makeText(this,"Enter amount",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Enter amount", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             double limit = Double.parseDouble(amountStr);
-            boolean notify = cbNotify.isChecked();
 
-            String category = spCategory.getSelectedItem().toString();
+            int pos = spCategory.getSelectedItemPosition();
 
-            switch (category) {
+            if (pos < 0 || pos >= categoryList.size()) return;
 
-                case "Dining":
-                    updateUI(spentDining, limit, notify,
-                            tvDiningAmount,
-                            tvDiningWarning,
-                            pbDining);
-                    break;
+            CategoryEntity c = categoryList.get(pos);
 
-                case "Shopping":
-                    updateUI(spentShopping, limit, notify,
-                            tvShoppingAmount,
-                            tvShoppingWarning,
-                            pbShopping);
-                    break;
+            new CreateBudgetUseCase(repo)
+                    .execute(
+                            c.category_id,
+                            c.name,
+                            limit,
+                            spPeriod.getSelectedItem().toString()
+                    );
 
-                case "Transport":
-                    updateUI(spentTransport, limit, notify,
-                            tvTransportAmount,
-                            tvTransportWarning,
-                            pbTransport);
-                    break;
-            }
+            loadBudgets();
 
-            Toast.makeText(this,"Budget created!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Budget created!", Toast.LENGTH_SHORT).show();
         });
     }
 
-    private void updateUI(double spent,
-                          double limit,
-                          boolean notify,
-                          TextView tvAmount,
-                          TextView tvWarning,
-                          ProgressBar progressBar) {
+    private void loadBudgets(){
 
-        if (limit <= 0) return;
+        new Thread(() -> {
 
-        int percent = (int) ((spent / limit) * 100);
-        int displayPercent = Math.min(percent, 100);
+            FintrackDatabase db =
+                    FintrackDatabase.getInstance(getApplicationContext());
 
-        tvAmount.setText(String.format("%,.0f / %,.0f VND", spent, limit));
-        progressBar.setProgress(displayPercent);
+            List<BudgetAlert> list = repo.findAll();
 
-        if (percent < 80) {
+            double total = 0;
 
-            progressBar.getProgressDrawable().setColorFilter(
-                    getResources().getColor(android.R.color.holo_green_dark),
-                    PorterDuff.Mode.SRC_IN);
+            for(BudgetAlert alert : list){
 
-        } else if (percent < 100) {
+                alert.spent = 0;
 
-            progressBar.getProgressDrawable().setColorFilter(
-                    getResources().getColor(android.R.color.holo_orange_dark),
-                    PorterDuff.Mode.SRC_IN);
+                Double spent =
+                        db.transactionDao().getTotalExpenseByCategory(
+                                "u001",
+                                alert.categoryId,
+                                getCurrentMonth()
+                        );
 
-            if (notify) {
-                tvWarning.setText("⚠ 80% budget reached");
-                tvWarning.setVisibility(View.VISIBLE);
+                alert.spent = spent == null ? 0 : spent;
+
+                total += alert.spent;
             }
 
-        } else {
+            double finalTotal = total;
 
-            progressBar.getProgressDrawable().setColorFilter(
-                    getResources().getColor(android.R.color.holo_red_dark),
-                    PorterDuff.Mode.SRC_IN);
+            runOnUiThread(() -> {
 
-            if (notify) {
-                tvWarning.setText("🚨 Budget exceeded!");
-                tvWarning.setVisibility(View.VISIBLE);
-            }
-        }
+                tvTotalSpent.setText(
+                        String.format("%,.0f VND", finalTotal)
+                );
+
+                if(adapter == null){
+                    adapter = new BudgetAdapter(list);
+                    rvBudgets.setAdapter(adapter);
+                }else{
+                    adapter.notifyDataSetChanged();
+                }
+
+            });
+
+        }).start();
+    }
+    private String getCurrentMonth(){
+
+        java.time.LocalDate now = java.time.LocalDate.now();
+
+        return now.getYear() + "-" +
+                String.format("%02d", now.getMonthValue());
     }
 }

@@ -20,17 +20,10 @@ public class TransactionApiImpl implements TransactionPort {
 
         transactionDao = db.transactionDao();
     }
-
     @Override
     public TransactionEntity getTransactionById(String txId) {
         return transactionDao.getById(txId);
     }
-
-    @Override
-    public List<TransactionEntity> getAllTransactions() {
-        return transactionDao.getAll();
-    }
-
     @Override
     public List<TransactionEntity> searchTransactions(
             String userId,
@@ -54,5 +47,37 @@ public class TransactionApiImpl implements TransactionPort {
     @Override
     public TransactionEntity getLatestTransaction() {
         return transactionDao.getLatestTransaction();
+    }
+    @Override
+    public List<TransactionEntity> getAllByUser(String userId) {
+        return transactionDao.getAllByUser(userId);
+    }
+
+    @Override
+    public List<TransactionEntity> getByAccount(String userId, String accountId) {
+        return transactionDao.getByAccount(userId, accountId);
+    }
+
+    @Override
+    public List<TransactionEntity> getByMonth(String userId, String month) {
+        return transactionDao.getByMonth(userId, month);
+    }
+
+    @Override
+    public Double getTotalExpense(String userId, String month) {
+        Double value = transactionDao.getTotalExpense(userId, month);
+        return value == null ? 0 : value;
+    }
+
+    @Override
+    public Double getTotalIncome(String userId, String month) {
+        Double value = transactionDao.getTotalIncome(userId, month);
+        return value == null ? 0 : value;
+    }
+
+    @Override
+    public Double getTotalExpenseByCategory(String userId, String categoryId, String month) {
+        Double value = transactionDao.getTotalExpenseByCategory(userId, categoryId, month);
+        return value == null ? 0 : value;
     }
 }
