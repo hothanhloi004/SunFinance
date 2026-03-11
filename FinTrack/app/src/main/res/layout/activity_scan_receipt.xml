@@ -15,7 +15,8 @@
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_media_previous"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/black" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -117,8 +118,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_toStartOf="@id/imgThumb">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -143,13 +143,6 @@
                     android:inputType="date"/>
 
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imgThumb"
-                android:layout_width="70dp"
-                android:layout_height="90dp"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/bg_receipt_thumb"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

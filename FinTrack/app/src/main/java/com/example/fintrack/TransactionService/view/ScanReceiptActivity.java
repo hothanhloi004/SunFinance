@@ -71,6 +71,12 @@ public class ScanReceiptActivity extends AppCompatActivity {
         btnGallery = findViewById(R.id.btnGallery);
         btnCapture = findViewById(R.id.btnCapture);
 
+        ImageView btnBack = findViewById(R.id.btnBack);
+
+        btnBack.setOnClickListener(v -> {
+            finish();
+        });
+
         Button btnRetake = findViewById(R.id.btnRetake);
 
         btnRetake.setOnClickListener(v -> {
@@ -269,31 +275,25 @@ public class ScanReceiptActivity extends AppCompatActivity {
 
         btnConfirm.setOnClickListener(v -> {
 
-            TransactionEntity transaction = new TransactionEntity();
+            String amount = txtTotalAmount.getText().toString().trim();
+            String date = txtDate.getText().toString().trim();
+            String merchant = txtMerchant.getText().toString().trim();
 
-            transaction.tx_id = "tx_" + System.currentTimeMillis();
-            transaction.user_id = "u001";
-            transaction.tx_type_id = "EXPENSE";
-            transaction.source_account_id = "acc001";
-            transaction.category_id = "FOOD";
-
-            String amountStr = txtTotalAmount.getText().toString().replace("$", "").trim();
-
-            if (amountStr.isEmpty()) {
+            if (amount.isEmpty()) {
                 Toast.makeText(this, "Amount required", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            transaction.amount = Double.parseDouble(amountStr);
-            transaction.note = txtMerchant.getText().toString();
-            transaction.tx_date = txtDate.getText().toString();
-            transaction.created_at = String.valueOf(System.currentTimeMillis());
+            Intent intent = new Intent(
+                    ScanReceiptActivity.this,
+                    AddTransactionActivity.class
+            );
 
-            CreateTransactionUseCase useCase = new CreateTransactionUseCase(this);
-            useCase.execute(transaction);
+            intent.putExtra("amount", amount);
+            intent.putExtra("date", date);
+            intent.putExtra("merchant", merchant);
 
-            Toast.makeText(this, "Transaction Saved!", Toast.LENGTH_SHORT).show();
-
+            startActivity(intent);
         });
     }
 

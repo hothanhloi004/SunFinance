@@ -21,6 +21,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.time.format.DateTimeFormatter;
+
 public class HistoryActivity extends AppCompatActivity {
 
     private TransactionAdapter adapter;
@@ -179,8 +181,17 @@ public class HistoryActivity extends AppCompatActivity {
                 LocalDate yesterday = today.minusDays(1);
                 String currentHeader = "";
 
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+
                 for (TransactionEntity tx : result) {
-                    LocalDate d = LocalDate.parse(tx.tx_date);
+
+                    LocalDate d;
+
+                    try {
+                        d = LocalDate.parse(tx.tx_date); // yyyy-MM-dd
+                    } catch (Exception e) {
+                        d = LocalDate.parse(tx.tx_date, formatter); // d/M/yyyy
+                    }
                     String header;
 
                     if (d.equals(today)) header = "Today";

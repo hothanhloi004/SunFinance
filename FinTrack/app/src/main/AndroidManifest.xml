@@ -32,10 +32,10 @@
         <activity
             android:name=".UserService.view.SplashActivity"
             android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".UserService.view.LoginActivity"
@@ -72,13 +72,17 @@
             android:exported="false" />
         <activity
             android:name=".TransactionService.view.CategoryManagementActivity"
-            android:exported="false" />
+            android:exported="false" >
+
+        </activity>
         <activity
             android:name=".TransactionService.view.UpdateDeleteTransactionActivity"
             android:exported="false" />
         <activity
             android:name=".TransactionService.view.ScanReceiptActivity"
-            android:exported="false"/>
+            android:exported="false">
+
+        </activity>
 
     </application>
 
