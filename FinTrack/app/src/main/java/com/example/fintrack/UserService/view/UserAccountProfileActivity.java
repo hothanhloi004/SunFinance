@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.fintrack.R;
 import com.example.fintrack.UserService.data.UserRepository;
 import com.example.fintrack.UserService.data.entity.UserEntity;
-import com.example.fintrack.UserService.util.LocaleHelper;
 
 public class UserAccountProfileActivity extends AppCompatActivity {
 
@@ -29,8 +28,6 @@ public class UserAccountProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        LocaleHelper.applyLanguage(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_account_profile);
@@ -75,16 +72,9 @@ public class UserAccountProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, "Security Settings", Toast.LENGTH_SHORT).show()
         );
 
-        itemLanguage.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    UserAccountProfileActivity.this,
-                    LanguageActivity.class
-            );
-
-            startActivity(intent);
-
-        });
+        itemLanguage.setOnClickListener(v ->
+                Toast.makeText(this, "Language feature removed", Toast.LENGTH_SHORT).show()
+        );
 
         itemNotification.setOnClickListener(v ->
                 Toast.makeText(this, "Notifications", Toast.LENGTH_SHORT).show()

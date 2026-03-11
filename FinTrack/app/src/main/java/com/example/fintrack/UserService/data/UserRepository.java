@@ -64,15 +64,7 @@ public class UserRepository {
         userDao.updateUser(userId, username, password, avatar);
     }
 
-    // ================= UPDATE LANGUAGE =================
-    public void updateLanguage(String language){
 
-        String userId = prefs.getString("user_id", null);
-
-        if(userId != null){
-            userDao.updateLanguage(userId, language);
-        }
-    }
 
     // ================= GET USER =================
     public UserEntity getCurrentUser() {

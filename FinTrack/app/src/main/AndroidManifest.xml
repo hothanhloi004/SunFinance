@@ -17,9 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FinTrack">
-        <activity
-            android:name=".UserService.view.LanguageActivity"
-            android:exported="false" />
+
         <activity
             android:name=".UserService.view.PersonalInfoActivity"
             android:exported="false" />
@@ -30,12 +28,12 @@
             android:name=".UserService.view.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".UserService.view.SplashActivity"
+            android:name=".AlertService.view.BudgetActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
         <activity
             android:name=".UserService.view.LoginActivity"
@@ -64,26 +62,38 @@
         <activity
             android:name=".AccountService.view.WalletTypeActivity"
             android:exported="false" />
+
         <activity
-            android:name=".TransactionService.view.AddTransactionActivity"
+            android:name=".TransactionService.view.CategoryManagementActivity"
             android:exported="false" />
         <activity
             android:name=".TransactionService.view.TransferActivity"
             android:exported="false" />
         <activity
-            android:name=".TransactionService.view.CategoryManagementActivity"
-            android:exported="false" >
-
-        </activity>
-        <activity
             android:name=".TransactionService.view.UpdateDeleteTransactionActivity"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".TransactionService.view.ScanReceiptActivity"
-            android:exported="false">
+            android:exported="false"/>
+        <activity
+            android:name=".TransactionService.view.HistoryActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".AlertService.view.AddReminderActivity"
+            android:exported="false"/>
 
-        </activity>
-
+        <activity
+            android:name=".AlertService.view.ReminderActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".AnalyticService.view.AnalyticsActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".AnalyticService.view.TrendReportActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".TransactionService.view.AddTransactionActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>
