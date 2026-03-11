@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
 import com.example.fintrack.UserService.data.UserRepository;
-import com.example.fintrack.UserService.util.LocaleHelper;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -22,8 +21,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        LocaleHelper.applyLanguage(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
