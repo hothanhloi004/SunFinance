@@ -82,11 +82,11 @@ public interface TransactionDao {
     // ===== GET BY ACCOUNT =====
     @Query(
             "SELECT * FROM transactions " +
-                    "WHERE source_account_id = :accountId " +
-                    "OR target_account_id = :accountId " +
+                    "WHERE user_id = :userId " +
+                    "AND (source_account_id = :accountId OR target_account_id = :accountId) " +
                     "ORDER BY tx_date DESC, created_at DESC"
     )
-    List<TransactionEntity> getByAccount(String accountId);
+    List<TransactionEntity> getByAccount(String userId, String accountId);
 
 
     // ===== GET BY MONTH =====
@@ -117,4 +117,12 @@ public interface TransactionDao {
                     "AND month = :month"
     )
     Double getTotalIncome(String userId, String month);
+    @Query(
+            "SELECT SUM(amount) FROM transactions " +
+                    "WHERE user_id = :userId " +
+                    "AND category_id = :categoryId " +
+                    "AND tx_type_id = 'EXPENSE' " +
+                    "AND month = :month"
+    )
+    Double getTotalExpenseByCategory(String userId, String categoryId, String month);
 }

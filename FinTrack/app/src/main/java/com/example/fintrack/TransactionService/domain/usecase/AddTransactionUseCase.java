@@ -5,23 +5,28 @@ import androidx.room.Transaction;
 import com.example.fintrack.TransactionService.data.dao.AlertDao;
 import com.example.fintrack.TransactionService.data.dao.TransactionDao;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
+import com.example.fintrack.AlertService.usecase.UpdateSpentUseCase;
 import com.example.fintrack.AccountService.port.AccountPort;
+import android.content.Context;
 
+import com.example.fintrack.AlertService.data.AlertRepository;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class AddTransactionUseCase {
-
+    private final Context context;
     private final TransactionDao transactionDao;
     private final AlertDao alertDao;
     private final AccountPort accountPort;
 
     public AddTransactionUseCase(
+            Context context,
             TransactionDao transactionDao,
             AlertDao alertDao,
             AccountPort accountPort
     ) {
+        this.context = context.getApplicationContext();
         this.transactionDao = transactionDao;
         this.alertDao = alertDao;
         this.accountPort = accountPort;
@@ -88,5 +93,14 @@ public class AddTransactionUseCase {
 
         // ===== SAVE =====
         transactionDao.insert(tx);
+        UpdateSpentUseCase updateSpent =
+                new UpdateSpentUseCase(context, AlertRepository.getInstance());
+
+        updateSpent.execute(
+                context,
+                userId,
+                categoryId,
+                tx.month
+        );
     }
 }

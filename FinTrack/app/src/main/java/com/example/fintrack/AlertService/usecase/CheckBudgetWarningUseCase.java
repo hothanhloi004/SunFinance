@@ -28,7 +28,7 @@ public class CheckBudgetWarningUseCase {
 
                 NotificationHelper.send(
                         context,
-                        "⚠ " + a.category + " reached 80% of budget"
+                        "⚠ " + a.categoryName + " reached 80% of budget"
                 );
             }
 
@@ -36,7 +36,7 @@ public class CheckBudgetWarningUseCase {
 
                 NotificationHelper.send(
                         context,
-                        "🚨 " + a.category + " exceeded budget!"
+                        "🚨 " + a.categoryName + " exceeded budget!"
                 );
             }
         }
