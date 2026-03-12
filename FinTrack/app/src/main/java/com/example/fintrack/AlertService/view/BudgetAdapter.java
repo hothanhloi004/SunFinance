@@ -1,5 +1,6 @@
 package com.example.fintrack.AlertService.view;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView tvCategory,tvAmount;
+        TextView tvCategory,tvAmount,tvWarning;
         ProgressBar pb;
 
         public ViewHolder(View v){
@@ -32,6 +33,9 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
             tvCategory = v.findViewById(R.id.tvCategory);
             tvAmount = v.findViewById(R.id.tvAmount);
             pb = v.findViewById(R.id.pbBudget);
+
+            // ⭐ thêm warning
+            tvWarning = v.findViewById(R.id.tvWarning);
         }
     }
 
@@ -64,6 +68,26 @@ public class BudgetAdapter extends RecyclerView.Adapter<BudgetAdapter.ViewHolder
         }
 
         h.pb.setProgress(percent);
+
+        // ⭐ THÊM CẢNH BÁO 80%
+        if(percent >= 100){
+
+            h.tvWarning.setText("🚨 Budget exceeded");
+            h.tvWarning.setTextColor(Color.RED);
+            h.tvWarning.setVisibility(View.VISIBLE);
+
+        }
+        else if(percent >= 80){
+
+            h.tvWarning.setText("⚠ Warning: Exceeded 80% limit");
+            h.tvWarning.setTextColor(Color.parseColor("#FFC107"));
+            h.tvWarning.setVisibility(View.VISIBLE);
+
+        }
+        else{
+
+            h.tvWarning.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.fintrack.AnalyticService.entity.AnalyticsData;
 import com.example.fintrack.R;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>{
@@ -37,7 +38,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         AnalyticsData data = list.get(position);
 
         holder.txtCategory.setText(data.getCategory());
-        holder.txtAmount.setText(data.getAmount()+" VND");
+
+        holder.txtAmount.setText(
+                NumberFormat.getInstance().format(data.getAmount()) + " VND"
+        );
+
         holder.txtPercent.setText(data.getPercent()+"%");
     }
 
