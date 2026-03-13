@@ -16,9 +16,9 @@ import com.example.fintrack.AccountService.model.AccountEntity;
 
 import java.text.DecimalFormat;
 import java.util.List;
-
+import android.widget.ImageButton;
 public class TransferActivity extends AppCompatActivity {
-
+    private ImageButton btnBackTransfer;
     private final DecimalFormat df = new DecimalFormat("#,###");
 
     private TextView tvSourceAccount, tvSourceBalance;
@@ -44,6 +44,7 @@ public class TransferActivity extends AppCompatActivity {
         accountApi = new AccountApiImpl(getApplicationContext());
 
         initViews();
+        btnBackTransfer.setOnClickListener(v -> finish());
         loadAccounts();
         setupPresetButtons();
         setupTransfer();
@@ -73,6 +74,7 @@ public class TransferActivity extends AppCompatActivity {
 
         edtAmount = findViewById(R.id.edtAmount);
         edtNote = findViewById(R.id.edtNote);
+        btnBackTransfer = findViewById(R.id.btnBackTransfer);
     }
 
     private void loadAccounts() {

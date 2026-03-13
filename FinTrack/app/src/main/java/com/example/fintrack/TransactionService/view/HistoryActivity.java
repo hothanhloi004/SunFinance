@@ -16,7 +16,9 @@ import com.example.fintrack.TransactionService.data.entity.CategoryEntity;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 import com.example.fintrack.TransactionService.domain.usecase.SearchTransactionUseCase;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
+import android.content.Intent;
+import com.example.fintrack.TransactionService.view.CategoryManagementActivity;
+import android.widget.ImageButton;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +49,15 @@ public class HistoryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
         // ===== VIEW =====
         EditText edtKeyword = findViewById(R.id.edtKeyword);
         btnSearch = findViewById(R.id.btnSearch);
+        ImageButton btnBackHistory = findViewById(R.id.btnBackHistory);
+        btnBackHistory.setOnClickListener(v -> finish());
 
         Spinner spinnerDate = findViewById(R.id.spinnerDate);
         Spinner spinnerWallet = findViewById(R.id.spinnerWallet);
@@ -60,6 +65,17 @@ public class HistoryActivity extends AppCompatActivity {
 
         RecyclerView rv = findViewById(R.id.rvTransactions);
         FloatingActionButton fabAdd = findViewById(R.id.fabAdd);
+        ImageButton btnFilter = findViewById(R.id.btnCategoryManager);
+
+        btnFilter.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    HistoryActivity.this,
+                    CategoryManagementActivity.class
+            );
+
+            startActivity(intent);
+        });
 
         // ===== DATE FILTER =====
         spinnerDate.setAdapter(new ArrayAdapter<>(

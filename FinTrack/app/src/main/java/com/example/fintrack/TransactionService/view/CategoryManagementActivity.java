@@ -24,7 +24,7 @@ import com.example.fintrack.TransactionService.domain.usecase.DeleteCategoryUseC
 
 import java.util.ArrayList;
 import java.util.List;
-
+import android.widget.ImageButton;
 public class CategoryManagementActivity extends AppCompatActivity {
 
     // ===== UI =====
@@ -54,6 +54,9 @@ public class CategoryManagementActivity extends AppCompatActivity {
 
         Button btnAddCategory = findViewById(R.id.btnAddCategory);
         btnAddCategory.setOnClickListener(v -> showCategoryDialog(null));
+        ImageButton btnBack = findViewById(R.id.btnBackCategory);
+
+        btnBack.setOnClickListener(v -> finish());
 
 
         // ===== LAYOUT MANAGER =====

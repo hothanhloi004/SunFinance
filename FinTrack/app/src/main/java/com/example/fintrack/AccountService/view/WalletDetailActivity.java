@@ -13,7 +13,9 @@ import com.example.fintrack.AccountService.usecase.DeleteAccountUseCase;
 import com.example.fintrack.R;
 import com.google.android.material.button.MaterialButton;
 import java.text.DecimalFormat;
-
+import com.example.fintrack.TransactionService.view.TransferActivity;
+import com.example.fintrack.TransactionService.view.HistoryActivity;
+import com.example.fintrack.TransactionService.view.AddTransactionActivity;
 public class WalletDetailActivity extends AppCompatActivity {
     private TextView txtName, txtId, txtBalance;
     private AccountRepository repo = AccountRepository.getInstance(); // Dùng Singleton
@@ -31,11 +33,62 @@ public class WalletDetailActivity extends AppCompatActivity {
         ImageButton btnMenuMore = findViewById(R.id.btnMenuMore);
         MaterialButton btnEdit = findViewById(R.id.btnEditWallet);
         MaterialButton btnDelete = findViewById(R.id.btnDeleteWallet);
+        ImageButton btnTransfer = findViewById(R.id.btnTransfer);
+        ImageButton btnStatements = findViewById(R.id.btnStatements);
+        ImageButton btnAddMoney = findViewById(R.id.btnAddMoney);
 
         walletId = getIntent().getStringExtra("WALLET_ID");
+
+        if (walletId == null) {
+            AccountEntity first = repo.getMockData().isEmpty() ? null : repo.getMockData().get(0);
+
+            if (first != null) {
+                walletId = first.accountId;
+            } else {
+                Toast.makeText(this, "Wallet not found", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+        }
+
         displayWalletInfo(walletId);
 
         btnBack.setOnClickListener(v -> finish());
+        btnAddMoney.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    WalletDetailActivity.this,
+                    AddTransactionActivity.class
+            );
+
+            intent.putExtra("TX_TYPE", "INCOME");
+            intent.putExtra("ACCOUNT_ID", walletId);
+
+            startActivity(intent);
+        });
+        btnTransfer.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    WalletDetailActivity.this,
+                    TransferActivity.class
+            );
+
+            intent.putExtra("WALLET_ID", walletId);
+
+            startActivity(intent);
+        });
+
+        btnStatements.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    WalletDetailActivity.this,
+                    HistoryActivity.class
+            );
+
+            intent.putExtra("WALLET_ID", walletId);
+
+            startActivity(intent);
+        });
         btnMenuMore.setOnClickListener(v -> showArchiveDialog());
 
         btnEdit.setOnClickListener(v -> {
@@ -84,5 +137,13 @@ public class WalletDetailActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(walletId != null){
+            displayWalletInfo(walletId);
+        }
     }
 }

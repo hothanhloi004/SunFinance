@@ -69,10 +69,19 @@ public class AddTransactionActivity extends AppCompatActivity {
                 .setOnClickListener(v -> openDatePicker());
 
         setupToggleButtons();
+        if ("INCOME".equals(currentTxType)) {
+            switchToggle(false);
+        } else {
+            switchToggle(true);
+        }
         setupCategoryPicker();
 
         btnSave.setOnClickListener(v -> addTransaction());
+        TextView btnCancel = findViewById(R.id.btnCancel);
+        TextView btnConfirm = findViewById(R.id.btnConfirm);
+        btnCancel.setOnClickListener(v -> finish());
 
+        btnConfirm.setOnClickListener(v -> addTransaction());
         btnScanReceipt = findViewById(R.id.btnScanReceipt);
         btnScanReceipt.setOnClickListener(v -> {
 
@@ -119,9 +128,19 @@ public class AddTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
-                AccountEntity acc = accounts.get(0);
+                AccountEntity acc = null;
 
-                selectedAccountId = acc.accountId;
+                for (AccountEntity a : accounts) {
+                    if (a.accountId.equals(selectedAccountId)) {
+                        acc = a;
+                        break;
+                    }
+                }
+
+                if (acc == null) {
+                    acc = accounts.get(0);
+                    selectedAccountId = acc.accountId;
+                }
 
                 txtAccountName.setText(acc.name);
                 txtBalance.setText("Số dư: " + df.format(acc.balance) + " đ");
@@ -273,7 +292,7 @@ public class AddTransactionActivity extends AppCompatActivity {
             return;
         }
 
-        double amount = Double.parseDouble(amountStr);
+        double amount = Double.parseDouble(amountStr.replace(",", ""));
         String date = selectedDate.toString();
 
         new Thread(() -> {
@@ -304,7 +323,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                             "Đã thêm giao dịch",
                             Toast.LENGTH_SHORT).show();
 
-                    loadAccounts();
+                    finish();
                 });
 
             } catch (Exception e) {

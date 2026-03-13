@@ -17,7 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.example.fintrack.TransactionService.view.TransferActivity;
 public class AccountDashboardActivity extends AppCompatActivity {
     private TextView tvTotalBalance, tvAccountCount;
     private RecyclerView rvWallets;
@@ -61,6 +61,10 @@ public class AccountDashboardActivity extends AppCompatActivity {
                 return false;
             });
             popup.show();
+        });
+        ImageButton btnTransfer = findViewById(R.id.btnTransfer);
+        btnTransfer.setOnClickListener(v -> {
+            startActivity(new Intent(this, TransferActivity.class));
         });
     }
 
