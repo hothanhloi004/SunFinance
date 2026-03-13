@@ -13,11 +13,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
-import com.example.fintrack.TransactionService.data.db.AppDatabase;
+import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,7 +30,17 @@ public class ImportBankStatementActivity extends AppCompatActivity {
 
     private Button btnSelectFile;
     private Button btnStartImport;
+
     private TextView txtFileName;
+
+    // preview mapping
+    private TextView txtPreviewDate;
+    private TextView txtPreviewAmount;
+    private TextView txtPreviewNote;
+
+    private String previewDate;
+    private double previewAmount;
+    private String previewNote;
 
     private Uri selectedFileUri;
 
@@ -39,7 +51,12 @@ public class ImportBankStatementActivity extends AppCompatActivity {
 
         btnSelectFile = findViewById(R.id.btnSelectFile);
         btnStartImport = findViewById(R.id.btnStartImport);
+
         txtFileName = findViewById(R.id.txtFileName);
+
+        txtPreviewDate = findViewById(R.id.txtPreviewDate);
+        txtPreviewAmount = findViewById(R.id.txtPreviewAmount);
+        txtPreviewNote = findViewById(R.id.txtPreviewNote);
 
         btnSelectFile.setOnClickListener(v -> openFilePicker());
 
@@ -49,7 +66,7 @@ public class ImportBankStatementActivity extends AppCompatActivity {
                 return;
             }
 
-            importCSV();
+            openAddTransaction(previewDate, previewAmount, previewNote);
         });
     }
 
@@ -58,12 +75,14 @@ public class ImportBankStatementActivity extends AppCompatActivity {
     // ===============================
 
     private void openFilePicker() {
-
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        startActivityForResult(Intent.createChooser(intent, "Select CSV File"), PICK_FILE_REQUEST);
+        startActivityForResult(
+                Intent.createChooser(intent, "Select CSV File"),
+                PICK_FILE_REQUEST
+        );
     }
 
     // ===============================
@@ -78,9 +97,66 @@ public class ImportBankStatementActivity extends AppCompatActivity {
 
             selectedFileUri = data.getData();
 
-            String fileName = getFileName(selectedFileUri);
+            if (selectedFileUri != null) {
+                String fileName = getFileName(selectedFileUri);
+                txtFileName.setText(fileName);
 
-            txtFileName.setText(fileName);
+                // show preview mapping
+                showCSVPreview();
+            }
+        }
+    }
+
+    // ===============================
+    // PREVIEW CSV
+    // ===============================
+
+    private void showCSVPreview() {
+
+        try {
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                            getContentResolver().openInputStream(selectedFileUri)
+                    )
+            );
+
+            // skip header
+            reader.readLine();
+
+            String firstRow = reader.readLine();
+
+            if (firstRow != null) {
+
+                String[] columns = firstRow.split(",");
+
+                if (columns.length >= 3) {
+
+                    String date = columns[0].trim();
+                    String amount = columns[1].trim();
+                    String note = columns[2].trim();
+
+                    txtPreviewDate.setText("Date: " + date);
+                    txtPreviewAmount.setText("Amount: " + amount);
+                    txtPreviewNote.setText("Note: " + note);
+
+                    previewDate = date;
+
+                    try {
+                        previewAmount = Double.parseDouble(amount);
+                    } catch (Exception e) {
+                        previewAmount = 0;
+                    }
+
+                    previewNote = note;
+                }
+            }
+
+            reader.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Cannot preview CSV", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -92,7 +168,7 @@ public class ImportBankStatementActivity extends AppCompatActivity {
 
         String result = null;
 
-        if (uri.getScheme().equals("content")) {
+        if ("content".equals(uri.getScheme())) {
 
             Cursor cursor = getContentResolver().query(uri, null, null, null, null);
 
@@ -101,14 +177,17 @@ public class ImportBankStatementActivity extends AppCompatActivity {
                 if (cursor != null && cursor.moveToFirst()) {
 
                     int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    result = cursor.getString(index);
 
+                    if (index >= 0) {
+                        result = cursor.getString(index);
+                    }
                 }
 
             } finally {
 
-                cursor.close();
-
+                if (cursor != null) {
+                    cursor.close();
+                }
             }
         }
 
@@ -132,44 +211,135 @@ public class ImportBankStatementActivity extends AppCompatActivity {
             try {
 
                 BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(getContentResolver().openInputStream(selectedFileUri))
+                        new InputStreamReader(
+                                getContentResolver().openInputStream(selectedFileUri)
+                        )
                 );
 
                 String line;
 
-                AppDatabase db = AppDatabase.getInstance(getApplicationContext());
+                FintrackDatabase db =
+                        FintrackDatabase.getInstance(getApplicationContext());
+
+                boolean isFirstLine = true;
+
+                List<TransactionEntity> bulkList = new ArrayList<>();
 
                 while ((line = reader.readLine()) != null) {
+
+                    if (isFirstLine) {
+                        isFirstLine = false;
+                        continue;
+                    }
 
                     String[] columns = line.split(",");
 
                     if (columns.length < 3) continue;
 
-                    String date = columns[0];
-                    double amount = Double.parseDouble(columns[1]);
-                    String note = columns[2];
+                    String date = columns[0].trim();
+                    double amount = Double.parseDouble(columns[1].trim());
+                    String note = columns[2].trim();
+
+                    TransactionEntity existed =
+                            db.transactionDao().checkDuplicate(date, note);
+
+                    if (existed != null) {
+                        continue;
+                    }
 
                     TransactionEntity transaction =
                             new TransactionEntity(date, "00:00", amount, note);
 
                     transaction.tx_id = UUID.randomUUID().toString();
+                    transaction.user_id = "u001";
+
+                    if (amount > 0) {
+                        transaction.tx_type_id = "INCOME";
+                        transaction.target_account_id = "acc001";
+                    } else {
+                        transaction.tx_type_id = "EXPENSE";
+                        transaction.source_account_id = "acc001";
+                    }
+
+                    String noteLower = note.toLowerCase();
+
+                    if (noteLower.contains("coffee") || noteLower.contains("cafe")) {
+                        transaction.category_id = "cat_food";
+                    } else if (noteLower.contains("grab") || noteLower.contains("taxi")) {
+                        transaction.category_id = "cat_transport";
+                    } else if (noteLower.contains("salary")) {
+                        transaction.category_id = "cat_income";
+                    }
+
+                    transaction.created_at = String.valueOf(System.currentTimeMillis());
                     transaction.month = date.substring(0, 7);
 
-                    db.transactionDao().insert(transaction);
+                    bulkList.add(transaction);
                 }
 
-                runOnUiThread(() ->
-                        Toast.makeText(this, "Import successful", Toast.LENGTH_LONG).show()
-                );
+                reader.close();
+
+                if (!bulkList.isEmpty()) {
+                    db.transactionDao().insertAll(bulkList);
+                }
+
+                runOnUiThread(() -> {
+
+                    Toast.makeText(
+                            ImportBankStatementActivity.this,
+                            "Import successful (" + bulkList.size() + " transactions)",
+                            Toast.LENGTH_LONG
+                    ).show();
+
+                    startActivity(new Intent(
+                            ImportBankStatementActivity.this,
+                            HistoryActivity.class
+                    ));
+
+                    finish();
+                });
 
             } catch (Exception e) {
 
                 e.printStackTrace();
 
                 runOnUiThread(() ->
-                        Toast.makeText(this, "Import failed", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                                ImportBankStatementActivity.this,
+                                "Import failed",
+                                Toast.LENGTH_LONG
+                        ).show()
                 );
             }
         });
+    }
+
+    // ===============================
+    // OPEN ADD TRANSACTION
+    // ===============================
+
+    private void openAddTransaction(
+            String date,
+            double amount,
+            String note
+    ) {
+
+        Intent intent = new Intent(this, AddTransactionActivity.class);
+
+        if (amount > 0) {
+
+            intent.putExtra("csv_type", "INCOME");
+
+        } else {
+
+            intent.putExtra("csv_type", "EXPENSE");
+            amount = Math.abs(amount);
+        }
+
+        intent.putExtra("csv_date", date);
+        intent.putExtra("csv_amount", amount);
+        intent.putExtra("csv_note", note);
+
+        startActivity(intent);
     }
 }
