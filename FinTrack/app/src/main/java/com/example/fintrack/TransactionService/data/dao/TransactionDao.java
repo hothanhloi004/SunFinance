@@ -21,7 +21,9 @@ public interface TransactionDao {
     // ===== UPDATE =====
     @Update
     void update(TransactionEntity transaction);
-
+    // ===== BULK INSERT =====
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<TransactionEntity> transactions);
     // ===== DELETE =====
     @Delete
     void delete(TransactionEntity transaction);

@@ -89,7 +89,6 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/bg_button_green"/>
 
-            <!-- FILE NAME (FIX LỖI) -->
             <TextView
                 android:id="@+id/txtFileName"
                 android:layout_width="wrap_content"
@@ -141,11 +140,12 @@
                     android:textColor="#6B7280"/>
 
                 <TextView
+                    android:id="@+id/txtPreviewDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="Transaction Date"
+                    android:text="-"
                     android:textStyle="bold"
                     android:textColor="#111827"/>
             </LinearLayout>
@@ -172,11 +172,12 @@
                     android:textColor="#6B7280"/>
 
                 <TextView
+                    android:id="@+id/txtPreviewAmount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="Value (VND)"
+                    android:text="-"
                     android:textStyle="bold"
                     android:textColor="#111827"/>
             </LinearLayout>
@@ -202,51 +203,19 @@
                     android:textColor="#6B7280"/>
 
                 <TextView
+                    android:id="@+id/txtPreviewNote"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="Note"
+                    android:text="-"
                     android:textStyle="bold"
                     android:textColor="#111827"/>
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- DUPLICATE CARD -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_marginTop="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Duplicate Detection"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#111827"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We will automatically skip transactions that have already been imported."
-                android:textSize="13sp"
-                android:textColor="#6B7280"
-                android:layout_marginTop="6dp"/>
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchDuplicate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:layout_marginTop="10dp"
-                app:thumbTint="#16A34A"
-                app:trackTint="#86EFAC"/>
-        </LinearLayout>
 
         <!-- START IMPORT BUTTON -->
         <Button
