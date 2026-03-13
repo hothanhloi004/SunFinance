@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,7 +73,17 @@ public class AddTransactionActivity extends AppCompatActivity {
         setupToggleButtons();
         setupCategoryPicker();
 
+        // ===== THÊM CODE NHẬN DỮ LIỆU CSV =====
+        readCSVData();
+
         btnSave.setOnClickListener(v -> addTransaction());
+
+        Button btnImportCSV = findViewById(R.id.btnImportCSV);
+
+        btnImportCSV.setOnClickListener(v -> {
+            Intent intent = new Intent(AddTransactionActivity.this, ImportBankStatementActivity.class);
+            startActivity(intent);
+        });
 
         btnScanReceipt = findViewById(R.id.btnScanReceipt);
         btnScanReceipt.setOnClickListener(v -> {
@@ -251,6 +262,51 @@ public class AddTransactionActivity extends AppCompatActivity {
                 now.getMinute(),
                 true
         ).show();
+    }
+
+    // ===== HÀM MỚI NHẬN DỮ LIỆU CSV =====
+
+    private void readCSVData() {
+
+        Intent intent = getIntent();
+
+        if (intent == null) return;
+
+        String date = intent.getStringExtra("csv_date");
+        double amount = intent.getDoubleExtra("csv_amount", 0);
+        String note = intent.getStringExtra("csv_note");
+        String type = intent.getStringExtra("csv_type");
+
+        if (amount != 0) {
+            edtAmount.setText(String.valueOf(amount));
+        }
+
+        if (note != null) {
+            edtNote.setText(note);
+        }
+
+        if (date != null) {
+
+            try {
+
+                selectedDate = LocalDate.parse(date);
+                updateDateTimeText();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (type != null) {
+
+            currentTxType = type;
+
+            if ("EXPENSE".equals(type)) {
+                switchToggle(true);
+            } else {
+                switchToggle(false);
+            }
+        }
     }
 
     private void addTransaction() {
