@@ -18,10 +18,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.fintrack.TransactionService.view.TransferActivity;
+
 public class AccountDashboardActivity extends AppCompatActivity {
     private TextView tvTotalBalance, tvAccountCount;
     private RecyclerView rvWallets;
-    private AccountRepository accountRepo = AccountRepository.getInstance();
+    private AccountRepository accountRepo; // Đã sửa: Chỉ khai báo, chưa khởi tạo
 
     private final List<AccountEntity> accountList = new ArrayList<>();
     private AccountAdapter adapter;
@@ -30,6 +31,9 @@ public class AccountDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_wallet);
+
+        // Đã sửa: Khởi tạo Repo và truyền Context (this) vào
+        accountRepo = AccountRepository.getInstance(this);
 
         tvTotalBalance = findViewById(R.id.tvTotalBalance);
         tvAccountCount = findViewById(R.id.tvAccountCount);
@@ -69,16 +73,25 @@ public class AccountDashboardActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
+        // Lấy User đang đăng nhập
+        com.example.fintrack.UserService.data.UserRepository userRepo =
+                new com.example.fintrack.UserService.data.UserRepository(this);
+        com.example.fintrack.UserService.data.entity.UserEntity currentUser = userRepo.getCurrentUser();
+
+        if (currentUser == null) return; // Không có user thì không load
+
         accountList.clear();
         double total = 0;
-        for (AccountEntity acc : accountRepo.getMockData()) {
-            // Đã dùng Hằng số STATUS_ACTIVE thay vì chuỗi
+
+        // Truyền user_id vào để lấy danh sách ví trong DB
+        for (AccountEntity acc : accountRepo.getAccountsByUser(currentUser.user_id)) {
             if (acc.status == null || acc.status.isEmpty() || acc.status.equalsIgnoreCase(AccountEntity.STATUS_ACTIVE)) {
                 accountList.add(acc);
                 total += acc.balance;
             }
         }
-        DecimalFormat df = new DecimalFormat("#,###");
+
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#,###");
         tvTotalBalance.setText(df.format(total) + " đ");
         tvAccountCount.setText("Checking across " + accountList.size() + " accounts");
         adapter.notifyDataSetChanged();

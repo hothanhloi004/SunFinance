@@ -13,18 +13,24 @@ import com.example.fintrack.AccountService.usecase.DeleteAccountUseCase;
 import com.example.fintrack.R;
 import com.google.android.material.button.MaterialButton;
 import java.text.DecimalFormat;
+import java.util.List;
+
 import com.example.fintrack.TransactionService.view.TransferActivity;
 import com.example.fintrack.TransactionService.view.HistoryActivity;
 import com.example.fintrack.TransactionService.view.AddTransactionActivity;
+
 public class WalletDetailActivity extends AppCompatActivity {
     private TextView txtName, txtId, txtBalance;
-    private AccountRepository repo = AccountRepository.getInstance(); // Dùng Singleton
+    private AccountRepository repo;
     private String walletId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_wallet);
+
+        // Khởi tạo Repo
+        repo = AccountRepository.getInstance(this);
 
         txtName = findViewById(R.id.txtDetailWalletName);
         txtId = findViewById(R.id.txtDetailWalletId);
@@ -40,11 +46,18 @@ public class WalletDetailActivity extends AppCompatActivity {
         walletId = getIntent().getStringExtra("WALLET_ID");
 
         if (walletId == null) {
-            AccountEntity first = repo.getMockData().isEmpty() ? null : repo.getMockData().get(0);
+            com.example.fintrack.UserService.data.UserRepository userRepo = new com.example.fintrack.UserService.data.UserRepository(this);
+            com.example.fintrack.UserService.data.entity.UserEntity currentUser = userRepo.getCurrentUser();
 
-            if (first != null) {
-                walletId = first.accountId;
-            } else {
+            if (currentUser != null) {
+                List<AccountEntity> userAccounts = repo.getAccountsByUser(currentUser.user_id);
+                AccountEntity first = userAccounts.isEmpty() ? null : userAccounts.get(0);
+                if (first != null) {
+                    walletId = first.accountId;
+                }
+            }
+
+            if (walletId == null) {
                 Toast.makeText(this, "Wallet not found", Toast.LENGTH_SHORT).show();
                 finish();
                 return;
@@ -55,38 +68,20 @@ public class WalletDetailActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
         btnAddMoney.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    WalletDetailActivity.this,
-                    AddTransactionActivity.class
-            );
-
+            Intent intent = new Intent(WalletDetailActivity.this, AddTransactionActivity.class);
             intent.putExtra("TX_TYPE", "INCOME");
             intent.putExtra("ACCOUNT_ID", walletId);
-
             startActivity(intent);
         });
         btnTransfer.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    WalletDetailActivity.this,
-                    TransferActivity.class
-            );
-
+            Intent intent = new Intent(WalletDetailActivity.this, TransferActivity.class);
             intent.putExtra("WALLET_ID", walletId);
-
             startActivity(intent);
         });
 
         btnStatements.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    WalletDetailActivity.this,
-                    HistoryActivity.class
-            );
-
+            Intent intent = new Intent(WalletDetailActivity.this, HistoryActivity.class);
             intent.putExtra("WALLET_ID", walletId);
-
             startActivity(intent);
         });
         btnMenuMore.setOnClickListener(v -> showArchiveDialog());
@@ -107,7 +102,8 @@ public class WalletDetailActivity extends AppCompatActivity {
                             ? "This wallet has no transactions. Do you want to permanently DELETE it?"
                             : "This wallet already has transactions. The system will ARCHIVE it from the main list.")
                     .setPositiveButton("Confirm", (dialog, which) -> {
-                        new DeleteAccountUseCase().execute(walletId);
+                        // Thêm Context vào đây
+                        new DeleteAccountUseCase(WalletDetailActivity.this).execute(walletId);
                         Toast.makeText(this, "Operation completed successfully", Toast.LENGTH_SHORT).show();
                         finish();
                     })
@@ -117,7 +113,7 @@ public class WalletDetailActivity extends AppCompatActivity {
     }
 
     private void displayWalletInfo(String id) {
-        AccountEntity account = repo.getAccountById(id); // Dùng hàm thay vì vòng lặp
+        AccountEntity account = repo.getAccountById(id);
         if (account != null) {
             txtName.setText(account.name);
             txtId.setText("WALLET ID: " + account.accountId);
@@ -138,10 +134,10 @@ public class WalletDetailActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-
         if(walletId != null){
             displayWalletInfo(walletId);
         }
