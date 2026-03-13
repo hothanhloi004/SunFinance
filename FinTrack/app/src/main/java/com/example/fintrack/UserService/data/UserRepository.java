@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.fintrack.UserService.data.dao.UserDao;
-import com.example.fintrack.UserService.data.database.AppDatabase;
+import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
 import com.example.fintrack.UserService.data.entity.UserEntity;
 
 public class UserRepository {
@@ -14,7 +14,7 @@ public class UserRepository {
 
     public UserRepository(Context context) {
 
-        AppDatabase db = AppDatabase.getInstance(context);
+        FintrackDatabase db = FintrackDatabase.getInstance(context);
         userDao = db.userDao();
 
         prefs = context.getSharedPreferences("USER_SESSION", Context.MODE_PRIVATE);
@@ -23,9 +23,9 @@ public class UserRepository {
     // ================= REGISTER =================
     public boolean register(String email, String fullName, String password) {
 
-        UserEntity exist = userDao.getUserByEmail(email);
-
-        if (exist != null) {
+        UserEntity exist = userDao.getUserByEmail(email); //ktra email trùng
+        UserEntity existUsername = userDao.getUserByUsername(fullName);//ktra fullname/username trùng
+        if (exist != null || existUsername != null) {
             return false;
         }
 
@@ -44,7 +44,10 @@ public class UserRepository {
 
         return true;
     }
-
+    // ================= GET USER BY USERNAME =================
+    public UserEntity getUserByUsername(String username) {
+        return userDao.getUserByUsername(username);
+    }
     // ================= LOGIN =================
     public boolean login(String username, String password) {
 
