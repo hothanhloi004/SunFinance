@@ -28,8 +28,16 @@
             android:name=".UserService.view.ForgotPasswordActivity"
             android:exported="false" />
         <activity
+
             android:name=".TransactionService.view.ImportBankStatementActivity"
             android:exported="true">
+
+
+
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
 
         </activity>
         <activity
@@ -78,8 +86,25 @@
             android:name=".TransactionService.view.ScanReceiptActivity"
             android:exported="false"/>
         <activity
+
             android:name=".TransactionService.view.CategoryManagementActivity"
             android:exported="true" />
+
+
+        <activity
+            android:name=".AlertService.view.AddReminderActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".AlertService.view.ReminderActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".AnalyticService.view.AnalyticsActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".AnalyticService.view.TrendReportActivity"
+            android:exported="false"/>
+
 
     </application>
 

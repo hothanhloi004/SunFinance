@@ -23,6 +23,7 @@ import com.example.fintrack.AccountService.api.AccountApiImpl;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import com.example.fintrack.AccountService.model.AccountEntity;
 
@@ -393,7 +394,10 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         if (date != null && !date.isEmpty()) {
             try {
-                selectedDate = LocalDate.parse(date);
+                DateTimeFormatter formatter =
+                        DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+                selectedDate = LocalDate.parse(date, formatter);
                 updateDateTimeText();
             } catch (Exception e) {
                 e.printStackTrace();
