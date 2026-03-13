@@ -2,12 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false"/>
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,68 +11,87 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FinTrack">
-        <activity
-            android:name=".UserService.view.LanguageActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UserService.view.PersonalInfoActivity"
-            android:exported="false" />
+
+        <!-- USER SERVICE -->
         <activity
             android:name=".UserService.view.UserAccountProfileActivity"
             android:exported="false" />
+
         <activity
             android:name=".UserService.view.ForgotPasswordActivity"
             android:exported="false" />
-        <activity
-            android:name=".UserService.view.SplashActivity"
-            android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        </activity>
+
         <activity
             android:name=".UserService.view.LoginActivity"
             android:exported="false" />
+
         <activity
             android:name=".UserService.view.RegisterActivity"
             android:exported="false" />
+
+        <!-- MAIN -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
+        <!-- ACCOUNT SERVICE -->
         <activity
             android:name=".AccountService.view.AccountDashboardActivity"
             android:exported="false" />
+
         <activity
             android:name=".AccountService.view.ManageWalletActivity"
             android:exported="false" />
+
         <activity
             android:name=".AccountService.view.WalletDetailActivity"
             android:exported="false" />
+
         <activity
             android:name=".AccountService.view.ActiveWalletsActivity"
             android:exported="false" />
+
         <activity
             android:name=".AccountService.view.HiddenWalletsActivity"
             android:exported="false" />
+
         <activity
             android:name=".AccountService.view.WalletTypeActivity"
             android:exported="false" />
+
+        <!-- TRANSACTION SERVICE -->
+
+        <!-- APP START HERE -->
+        <activity
+            android:name=".TransactionService.view.ImportBankStatementActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".TransactionService.view.HistoryActivity"
+            android:exported="false" />
+
         <activity
             android:name=".TransactionService.view.AddTransactionActivity"
             android:exported="false" />
+
         <activity
             android:name=".TransactionService.view.TransferActivity"
             android:exported="false" />
+
         <activity
             android:name=".TransactionService.view.CategoryManagementActivity"
             android:exported="false" />
+
         <activity
             android:name=".TransactionService.view.UpdateDeleteTransactionActivity"
             android:exported="false" />
-        <activity
-            android:name=".TransactionService.view.ScanReceiptActivity"
-            android:exported="false"/>
 
     </application>
 
