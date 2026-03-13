@@ -62,7 +62,6 @@
         <activity
             android:name=".AccountService.view.WalletTypeActivity"
             android:exported="false" />
-
         <activity
             android:name=".TransactionService.view.CategoryManagementActivity"
             android:exported="false" />
@@ -81,7 +80,6 @@
         <activity
             android:name=".AlertService.view.AddReminderActivity"
             android:exported="false"/>
-
         <activity
             android:name=".AlertService.view.ReminderActivity"
             android:exported="false"/>
