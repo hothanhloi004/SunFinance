@@ -32,7 +32,6 @@ public class UpdateSpentUseCase {
             if (!alert.categoryId.equals(categoryId))
                 continue;
 
-            // lấy dữ liệu thật từ TransactionService
             Double spent = transactionPort.getTotalExpenseByCategory(
                     userId,
                     categoryId,
@@ -41,12 +40,20 @@ public class UpdateSpentUseCase {
 
             alert.spent = spent == null ? 0 : spent;
 
-            if (domain.isWarning(alert)) {
+            // reset trigger
+            double percent = alert.spent / alert.limitAmount;
+            if (percent < alert.threshold) {
+                alert.triggered = false;
+            }
+
+            if (domain.isWarning(alert) && !alert.triggered) {
 
                 NotificationHelper.send(
                         context,
                         "⚠ Budget 80% reached for " + alert.categoryName
                 );
+
+                alert.triggered = true;
             }
 
             if (domain.isExceeded(alert)) {
@@ -57,7 +64,5 @@ public class UpdateSpentUseCase {
                 );
             }
         }
-
     }
-
 }

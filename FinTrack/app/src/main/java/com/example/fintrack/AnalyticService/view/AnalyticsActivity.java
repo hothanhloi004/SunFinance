@@ -20,6 +20,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.*;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,6 @@ public class AnalyticsActivity extends AppCompatActivity {
         txtBalance = findViewById(R.id.txtBalance);
         btnLimit = findViewById(R.id.btnLimit);
 
-        // FIX DATABASE TYPE
         repo = new AnalyticsRepository(
                 FintrackDatabase
                         .getInstance(this)
@@ -56,6 +56,22 @@ public class AnalyticsActivity extends AppCompatActivity {
         );
 
         service = new AnalyticsDomainService(repo);
+
+        loadAnalytics();
+        calculateBalance();
+
+        btnLimit.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    AnalyticsActivity.this,
+                    TrendReportActivity.class
+            );
+
+            startActivity(intent);
+        });
+    }
+
+    private void loadAnalytics(){
 
         new Thread(() -> {
 
@@ -81,29 +97,20 @@ public class AnalyticsActivity extends AppCompatActivity {
             });
 
         }).start();
-
-        calculateBalance();
-
-        btnLimit.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    AnalyticsActivity.this,
-                    TrendReportActivity.class
-            );
-
-            startActivity(intent);
-        });
     }
 
     private void setupPieChart(List<AnalyticsData> list){
 
         List<PieEntry> entries = new ArrayList<>();
 
+        double total = 0;
+
         for(AnalyticsData d : list){
-            entries.add(new PieEntry((float)d.getPercent(), d.getCategory()));
+            entries.add(new PieEntry((float)d.getAmount(), d.getCategory()));
+            total += d.getAmount();
         }
 
-        PieDataSet set = new PieDataSet(entries,"");
+        PieDataSet set = new PieDataSet(entries,"Expenses");
 
         set.setColors(
                 Color.parseColor("#2ECC71"),
@@ -113,11 +120,33 @@ public class AnalyticsActivity extends AppCompatActivity {
                 Color.parseColor("#E74C3C")
         );
 
+        set.setSliceSpace(3f);
+        set.setValueTextColor(Color.WHITE);
+        set.setValueTextSize(12f);
+
         PieData data = new PieData(set);
 
         pieChart.setData(data);
-        pieChart.setUsePercentValues(true);
+
+        // UI CHART
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setHoleRadius(70f);
+        pieChart.setTransparentCircleRadius(75f);
+
+        // TEXT Ở GIỮA
+        pieChart.setCenterText(
+                "TOTAL SPENT\n" +
+                        NumberFormat.getInstance().format(total)
+        );
+
+        pieChart.setCenterTextSize(16f);
+        pieChart.setCenterTextColor(Color.BLACK);
+
         pieChart.getDescription().setEnabled(false);
+        pieChart.getLegend().setEnabled(true);
+
+        pieChart.animateY(1200);
+
         pieChart.invalidate();
     }
 
@@ -139,6 +168,9 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         barChart.setData(data);
         barChart.getDescription().setEnabled(false);
+
+        barChart.animateY(1000);
+
         barChart.invalidate();
     }
 
@@ -169,7 +201,9 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             runOnUiThread(() ->
                     txtBalance.setText(
-                            "Balance: " + balance + " VND"
+                            "Balance: "
+                                    + NumberFormat.getInstance().format(balance)
+                                    + " VND"
                     )
             );
 

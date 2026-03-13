@@ -119,6 +119,16 @@ public class PersonalInfoActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 return;
             }
+            // CHECK USERNAME TRÙNG
+            UserEntity exist = repo.getUserByUsername(username);
+
+            if (exist != null && !exist.user_id.equals(currentUser.user_id)) {
+
+                Toast.makeText(this,
+                        "Tên người dùng đã được sử dụng",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
 
         } else {
             username = currentUser.full_name;

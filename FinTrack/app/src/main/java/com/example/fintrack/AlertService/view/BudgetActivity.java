@@ -1,23 +1,22 @@
 package com.example.fintrack.AlertService.view;
 
-import android.graphics.PorterDuff;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fintrack.R;
 import com.example.fintrack.AlertService.data.AlertRepository;
+import com.example.fintrack.AlertService.entity.BudgetAlert;
 import com.example.fintrack.AlertService.usecase.CreateBudgetUseCase;
+import com.example.fintrack.AlertService.usecase.CheckBudgetWarningUseCase;
+import com.example.fintrack.AnalyticService.view.AnalyticsActivity;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
 import com.example.fintrack.TransactionService.data.entity.CategoryEntity;
-import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import com.example.fintrack.AlertService.entity.BudgetAlert;
-import com.example.fintrack.AlertService.view.BudgetAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +26,16 @@ public class BudgetActivity extends AppCompatActivity {
     private Spinner spCategory, spPeriod;
     private EditText etAmount;
     private CheckBox cbNotify;
-    private Button btnCreate;
 
+    private Button btnCreate, btnAnalytics;
 
     private TextView tvTotalSpent;
 
-
-
     private List<CategoryEntity> categoryList = new ArrayList<>();
+
     RecyclerView rvBudgets;
     BudgetAdapter adapter;
+
     AlertRepository repo = AlertRepository.getInstance();
 
     @Override
@@ -44,10 +43,22 @@ public class BudgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget);
 
+        // ⭐ xin quyền notification Android 13+
+        if (Build.VERSION.SDK_INT >= 33) {
+            if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != getPackageManager().PERMISSION_GRANTED) {
+
+                requestPermissions(
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        1
+                );
+            }
+        }
+
         initViews();
         initSpinners();
-
         setupCreateButton();
+        setupAnalyticsButton();
         loadBudgets();
     }
 
@@ -57,12 +68,14 @@ public class BudgetActivity extends AppCompatActivity {
         spPeriod = findViewById(R.id.spPeriod);
         etAmount = findViewById(R.id.etAmount);
         cbNotify = findViewById(R.id.cbNotify);
+
         btnCreate = findViewById(R.id.btnCreate);
+        btnAnalytics = findViewById(R.id.btnAnalytics);
+
         rvBudgets = findViewById(R.id.rvBudgets);
         rvBudgets.setLayoutManager(new LinearLayoutManager(this));
 
         tvTotalSpent = findViewById(R.id.tvTotalSpent);
-
     }
 
     private void initSpinners() {
@@ -93,7 +106,6 @@ public class BudgetActivity extends AppCompatActivity {
 
         }).start();
 
-
         String[] periods = {"Daily", "Weekly", "Monthly"};
 
         ArrayAdapter<String> periodAdapter =
@@ -103,10 +115,6 @@ public class BudgetActivity extends AppCompatActivity {
 
         spPeriod.setAdapter(periodAdapter);
     }
-
-
-
-
 
     private void setupCreateButton() {
 
@@ -138,6 +146,27 @@ public class BudgetActivity extends AppCompatActivity {
             loadBudgets();
 
             Toast.makeText(this, "Budget created!", Toast.LENGTH_SHORT).show();
+
+            if (cbNotify.isChecked()) {
+
+                new CheckBudgetWarningUseCase(repo)
+                        .execute(BudgetActivity.this);
+            }
+
+        });
+    }
+
+    // ⭐ BUTTON CHUYỂN SANG ANALYTICS
+    private void setupAnalyticsButton(){
+
+        btnAnalytics.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    BudgetActivity.this,
+                    AnalyticsActivity.class
+            );
+
+            startActivity(intent);
         });
     }
 
@@ -183,10 +212,17 @@ public class BudgetActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                 }
 
+                if (cbNotify.isChecked()) {
+
+                    new CheckBudgetWarningUseCase(repo)
+                            .execute(BudgetActivity.this);
+                }
+
             });
 
         }).start();
     }
+
     private String getCurrentMonth(){
 
         java.time.LocalDate now = java.time.LocalDate.now();

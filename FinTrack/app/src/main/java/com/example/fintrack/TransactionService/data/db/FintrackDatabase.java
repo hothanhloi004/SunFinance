@@ -15,6 +15,8 @@ import com.example.fintrack.TransactionService.data.entity.*;
 import com.example.fintrack.AccountService.data.AccountDao;
 import com.example.fintrack.AccountService.model.AccountEntity;
 import com.example.fintrack.AccountService.model.AccountTypeEntity;
+import com.example.fintrack.UserService.data.dao.UserDao;//User thêm vào
+import com.example.fintrack.UserService.data.entity.UserEntity;// User
 
 @Database(
         entities = {
@@ -37,6 +39,7 @@ public abstract class FintrackDatabase extends RoomDatabase {
     public abstract AccountDao accountDao();
     public abstract CategoryDao categoryDao();
     public abstract AlertDao alertDao();
+    public abstract UserDao userDao(); //User thêm vào
 
     public static FintrackDatabase getInstance(Context context) {
         if (INSTANCE == null) {
@@ -47,6 +50,7 @@ public abstract class FintrackDatabase extends RoomDatabase {
                                     FintrackDatabase.class,
                                     "fintrack_db_clean"
                             )
+                            .allowMainThreadQueries()   // thêm dòng này
                             .fallbackToDestructiveMigration()
                             .addCallback(new Callback() {
                                 @Override
