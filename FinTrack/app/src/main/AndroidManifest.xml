@@ -28,7 +28,7 @@
             android:name=".UserService.view.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".AlertService.view.BudgetActivity"
+            android:name=".TransactionService.view.AddTransactionActivity"
             android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -92,7 +92,7 @@
             android:name=".AnalyticService.view.TrendReportActivity"
             android:exported="false"/>
         <activity
-            android:name=".TransactionService.view.AddTransactionActivity"
+            android:name=".UserService.view.SplashActivity"
             android:exported="false"/>
     </application>
 
