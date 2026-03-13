@@ -215,40 +215,7 @@
 
         </LinearLayout>
 
-        <!-- DUPLICATE CARD -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:layout_marginTop="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Duplicate Detection"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#111827"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We will automatically skip transactions that have already been imported."
-                android:textSize="13sp"
-                android:textColor="#6B7280"
-                android:layout_marginTop="6dp"/>
-
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchDuplicate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:layout_marginTop="10dp"
-                app:thumbTint="#16A34A"
-                app:trackTint="#86EFAC"/>
-        </LinearLayout>
 
         <!-- START IMPORT BUTTON -->
         <Button

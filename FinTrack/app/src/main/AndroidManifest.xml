@@ -17,9 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FinTrack">
-        <activity
-            android:name=".UserService.view.LanguageActivity"
-            android:exported="false" />
+
         <activity
             android:name=".UserService.view.PersonalInfoActivity"
             android:exported="false" />
@@ -30,12 +28,9 @@
             android:name=".UserService.view.ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".UserService.view.SplashActivity"
+            android:name=".TransactionService.view.ImportBankStatementActivity"
             android:exported="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+
         </activity>
         <activity
             android:name=".UserService.view.LoginActivity"
@@ -66,19 +61,25 @@
             android:exported="false" />
         <activity
             android:name=".TransactionService.view.AddTransactionActivity"
-            android:exported="false" />
+            android:exported="true" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name=".TransactionService.view.TransferActivity"
             android:exported="false" />
-        <activity
-            android:name=".TransactionService.view.CategoryManagementActivity"
-            android:exported="false" />
+
         <activity
             android:name=".TransactionService.view.UpdateDeleteTransactionActivity"
             android:exported="false" />
         <activity
             android:name=".TransactionService.view.ScanReceiptActivity"
             android:exported="false"/>
+        <activity
+            android:name=".TransactionService.view.CategoryManagementActivity"
+            android:exported="true" />
 
     </application>
 

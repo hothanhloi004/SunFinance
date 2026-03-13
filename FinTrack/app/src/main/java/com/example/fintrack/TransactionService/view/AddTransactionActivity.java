@@ -77,6 +77,13 @@ public class AddTransactionActivity extends AppCompatActivity {
 
         btnSave.setOnClickListener(v -> addTransaction());
 
+        Button btnImportCSV = findViewById(R.id.btnImportCSV);
+
+        btnImportCSV.setOnClickListener(v -> {
+            Intent intent = new Intent(AddTransactionActivity.this, ImportBankStatementActivity.class);
+            startActivity(intent);
+        });
+
         btnScanReceipt = findViewById(R.id.btnScanReceipt);
         btnScanReceipt.setOnClickListener(v -> {
 

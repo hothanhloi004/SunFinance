@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,12 @@ public class ImportBankStatementActivity extends AppCompatActivity {
         txtPreviewNote = findViewById(R.id.txtPreviewNote);
 
         btnSelectFile.setOnClickListener(v -> openFilePicker());
+
+        ImageView btnBack = findViewById(R.id.btnBack);
+
+        btnBack.setOnClickListener(v -> {
+            finish(); // quay lại màn hình trước
+        });
 
         btnStartImport.setOnClickListener(v -> {
             if (selectedFileUri == null) {
