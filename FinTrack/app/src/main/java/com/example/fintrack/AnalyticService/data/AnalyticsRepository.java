@@ -26,6 +26,7 @@ public class AnalyticsRepository {
                         "FROM transactions t " +
                         "JOIN categories c ON t.category_id = c.category_id " +
                         "WHERE t.tx_type_id='EXPENSE' " +
+                        "AND t.user_id='u001' " +
                         "GROUP BY c.name"
         );
 
@@ -52,7 +53,7 @@ public class AnalyticsRepository {
             int percent = 0;
 
             if(total > 0){
-                percent = (int)((amounts.get(i)/total)*100);
+                percent = (int)((amounts.get(i) / total) * 100);
             }
 
             list.add(
