@@ -7,7 +7,7 @@ public class ReceiptParser {
 
     public static String extractTotal(String text) {
 
-        text = text.replace(",", ""); // bỏ dấu phẩy nếu có
+        text = text.replace(",", "");
 
         Pattern pattern = Pattern.compile("\\$?\\s*\\d+\\.\\d{2}");
         Matcher matcher = pattern.matcher(text);
@@ -17,16 +17,31 @@ public class ReceiptParser {
             lastAmount = matcher.group().trim();
         }
 
-        return lastAmount;
+        return lastAmount.replace("$", ""); // bỏ $
     }
 
     public static String extractDate(String text) {
 
-        Pattern pattern = Pattern.compile("\\d{2}[-/]\\d{2}[-/]\\d{4}");
+        Pattern pattern = Pattern.compile("\\d{1,2}[-/]\\d{1,2}[-/]\\d{4}");
         Matcher matcher = pattern.matcher(text);
 
         if (matcher.find()) {
-            return matcher.group().trim();
+
+            String rawDate = matcher.group().trim();
+
+            try {
+
+                String[] parts = rawDate.split("[-/]");
+
+                String day = parts[0];
+                String month = parts[1];
+                String year = parts[2];
+
+                return day + "-" + month + "-" + year; // dd-MM-yyyy
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return "";
