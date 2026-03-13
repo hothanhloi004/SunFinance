@@ -10,7 +10,9 @@ import com.example.fintrack.R;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
 import com.example.fintrack.TransactionService.data.entity.TransactionEntity;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.*;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -21,6 +23,9 @@ public class TrendReportActivity extends AppCompatActivity {
     BarChart chart;
     TextView txtSaving;
     LinearLayout layoutBreakdown;
+
+    SimpleDateFormat dbFormat =
+            new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,40 +50,63 @@ public class TrendReportActivity extends AppCompatActivity {
             List<TransactionEntity> list =
                     db.transactionDao().getAll();
 
-            List<BarEntry> income = new ArrayList<>();
-            List<BarEntry> expense = new ArrayList<>();
+            List<BarEntry> incomeEntries = new ArrayList<>();
+            List<BarEntry> expenseEntries = new ArrayList<>();
+
+            List<String> labels = new ArrayList<>();
 
             double totalIncome = 0;
             double totalExpense = 0;
 
             Calendar cal = Calendar.getInstance();
 
-            for(int month = 1; month <= 6; month++){
+            for(int i = 5; i >= 0; i--){
 
-                double i = 0;
-                double e = 0;
+                Calendar temp = (Calendar) cal.clone();
+                temp.add(Calendar.MONTH,-i);
+
+                int month = temp.get(Calendar.MONTH);
+                int year = temp.get(Calendar.YEAR);
+
+                double income = 0;
+                double expense = 0;
 
                 for(TransactionEntity t : list){
 
-                    cal.setTime(new Date(t.tx_date));
+                    try {
 
-                    int m = cal.get(Calendar.MONTH) + 1;
+                        Date date = dbFormat.parse(t.tx_date);
 
-                    if(m == month){
+                        Calendar txCal = Calendar.getInstance();
+                        txCal.setTime(date);
 
-                        if("INCOME".equals(t.tx_type_id)){
-                            i += t.amount;
-                        }else{
-                            e += t.amount;
+                        if(txCal.get(Calendar.MONTH)==month &&
+                                txCal.get(Calendar.YEAR)==year){
+
+                            if("INCOME".equals(t.tx_type_id)){
+                                income += t.amount;
+                            }else{
+                                expense += t.amount;
+                            }
                         }
+
+                    }catch(Exception e){
+                        e.printStackTrace();
                     }
                 }
 
-                totalIncome += i;
-                totalExpense += e;
+                totalIncome += income;
+                totalExpense += expense;
 
-                income.add(new BarEntry(month,(float)i));
-                expense.add(new BarEntry(month,(float)e));
+                int x = 5-i;
+
+                incomeEntries.add(new BarEntry(x,(float)income));
+                expenseEntries.add(new BarEntry(x,(float)expense));
+
+                labels.add(
+                        new SimpleDateFormat("MMM",Locale.getDefault())
+                                .format(temp.getTime())
+                );
             }
 
             double saving = totalIncome - totalExpense;
@@ -90,20 +118,30 @@ public class TrendReportActivity extends AppCompatActivity {
                 );
 
                 BarDataSet incomeSet =
-                        new BarDataSet(income,"Income");
+                        new BarDataSet(incomeEntries,"Income");
 
                 incomeSet.setColor(0xFF2ECC71);
 
                 BarDataSet expenseSet =
-                        new BarDataSet(expense,"Expense");
+                        new BarDataSet(expenseEntries,"Expense");
 
-                expenseSet.setColor(0xFFBDC3C7);
+                expenseSet.setColor(0xFFE74C3C);
 
                 BarData data =
                         new BarData(incomeSet,expenseSet);
 
+                data.setBarWidth(0.3f);
+
                 chart.setData(data);
+
+                XAxis xAxis = chart.getXAxis();
+                xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+                xAxis.setGranularity(1f);
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
                 chart.getDescription().setEnabled(false);
+                chart.animateY(1000);
+
                 chart.invalidate();
             });
 
@@ -125,55 +163,68 @@ public class TrendReportActivity extends AppCompatActivity {
 
             Calendar cal = Calendar.getInstance();
 
-            for(int month=1; month<=6; month++){
+            for(int i = 5; i >= 0; i--){
+
+                Calendar temp = (Calendar) cal.clone();
+                temp.add(Calendar.MONTH,-i);
+
+                int month = temp.get(Calendar.MONTH);
+                int year = temp.get(Calendar.YEAR);
 
                 double income = 0;
                 double expense = 0;
 
                 for(TransactionEntity t : list){
 
-                    cal.setTime(new Date(t.tx_date));
+                    try {
 
-                    int m = cal.get(Calendar.MONTH) + 1;
+                        Date date = dbFormat.parse(t.tx_date);
 
-                    if(m == month){
+                        Calendar txCal = Calendar.getInstance();
+                        txCal.setTime(date);
 
-                        if("INCOME".equals(t.tx_type_id)){
-                            income += t.amount;
-                        }else{
-                            expense += t.amount;
+                        if(txCal.get(Calendar.MONTH)==month &&
+                                txCal.get(Calendar.YEAR)==year){
+
+                            if("INCOME".equals(t.tx_type_id)){
+                                income += t.amount;
+                            }else{
+                                expense += t.amount;
+                            }
                         }
+
+                    }catch(Exception e){
+                        e.printStackTrace();
                     }
                 }
 
-                cal.set(Calendar.MONTH,month-1);
-
                 String monthName =
-                        new SimpleDateFormat("MMMM",Locale.getDefault())
-                                .format(cal.getTime());
+                        new SimpleDateFormat("MMM yyyy",Locale.getDefault())
+                                .format(temp.getTime());
 
                 map.put(monthName,new double[]{income,expense});
             }
 
             runOnUiThread(() -> {
 
+                layoutBreakdown.removeAllViews();
+
                 for(String m : map.keySet()){
 
                     double income = map.get(m)[0];
                     double expense = map.get(m)[1];
 
-                    if(income==0 && expense==0) continue;
-
                     TextView tv = new TextView(this);
 
                     tv.setText(
-                            m + "     "
+                            m + "    Income: "
                                     + NumberFormat.getInstance().format(income)
-                                    + "     "
+                                    + "    Expense: "
                                     + NumberFormat.getInstance().format(expense)
                     );
 
-                    tv.setPadding(10,10,10,10);
+                    tv.setPadding(12,12,12,12);
+                    tv.setTextSize(14);
 
                     layoutBreakdown.addView(tv);
                 }

@@ -89,10 +89,20 @@
         </LinearLayout>
 
         <!-- EXISTING BUDGET ITEMS -->
-        <include layout="@layout/item_budget_dining"/>
-        <include layout="@layout/item_budget_shopping"/>
-        <include layout="@layout/item_budget_transport"/>
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBudgets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+        <Button
+            android:id="@+id/btnAnalytics"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="📊 View Analytics"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/rounded_button_green"/>
         <!-- SET NEW LIMIT CARD -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

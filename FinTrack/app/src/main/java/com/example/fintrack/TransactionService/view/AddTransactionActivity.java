@@ -2,6 +2,7 @@ package com.example.fintrack.TransactionService.view;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
 
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.ExperimentalGetImage;
 
 import com.example.fintrack.R;
 import com.example.fintrack.TransactionService.data.db.FintrackDatabase;
@@ -44,6 +47,7 @@ public class AddTransactionActivity extends AppCompatActivity {
 
     private AccountApiImpl accountApi;
 
+    @OptIn(markerClass = ExperimentalGetImage.class)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,9 @@ public class AddTransactionActivity extends AppCompatActivity {
         selectedTime = LocalTime.now();
         updateDateTimeText();
 
+        Button btnScanReceipt;
+        receiveScanData();
+
         loadAccounts();
 
         findViewById(R.id.layoutDateTime)
@@ -69,6 +76,17 @@ public class AddTransactionActivity extends AppCompatActivity {
         readCSVData();
 
         btnSave.setOnClickListener(v -> addTransaction());
+
+        btnScanReceipt = findViewById(R.id.btnScanReceipt);
+        btnScanReceipt.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    AddTransactionActivity.this,
+                    ScanReceiptActivity.class
+            );
+
+            startActivity(intent);
+        });
     }
 
     private void initViews() {
@@ -315,6 +333,7 @@ public class AddTransactionActivity extends AppCompatActivity {
                         FintrackDatabase.getInstance(getApplicationContext());
 
                 new AddTransactionUseCase(
+                        getApplicationContext(),
                         db.transactionDao(),
                         db.alertDao(),
                         accountApi
@@ -347,5 +366,31 @@ public class AddTransactionActivity extends AppCompatActivity {
             }
 
         }).start();
+    }
+
+    private void receiveScanData() {
+
+        if (getIntent() == null) return;
+
+        String amount = getIntent().getStringExtra("amount");
+        String date = getIntent().getStringExtra("date");
+        String merchant = getIntent().getStringExtra("merchant");
+
+        if (amount != null) {
+            edtAmount.setText(amount);
+        }
+
+        if (merchant != null) {
+            edtNote.setText(merchant);
+        }
+
+        if (date != null && !date.isEmpty()) {
+            try {
+                selectedDate = LocalDate.parse(date);
+                updateDateTimeText();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

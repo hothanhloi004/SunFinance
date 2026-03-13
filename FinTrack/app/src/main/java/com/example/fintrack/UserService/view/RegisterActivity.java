@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
 import com.example.fintrack.UserService.data.UserRepository;
-import com.example.fintrack.UserService.util.LocaleHelper;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -22,8 +21,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        LocaleHelper.applyLanguage(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -48,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
 
-        // 1️⃣ Validate rỗng
+        // Validate rỗng
         if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this,
                     "Vui lòng nhập đầy đủ thông tin",
@@ -56,7 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // 2️⃣ Username >= 8 ký tự
+        // Username >= 8 ký tự
         if (username.length() < 8) {
             Toast.makeText(this,
                     "Username phải tối thiểu 8 ký tự",
@@ -64,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // 3️⃣ Validate email
+        // Validate email
         if (!isValidGmail(email)) {
             Toast.makeText(this,
                     "Email phải đúng định dạng @gmail.com",
@@ -72,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // 4️⃣ Password >= 8 ký tự và có ít nhất 1 chữ hoa
+        // Password >= 8 ký tự và có ít nhất 1 chữ hoa
         if (password.length() < 8 || !password.matches(".*[A-Z].*")) {
             Toast.makeText(this,
                     "Password phải tối thiểu 8 ký tự và có ít nhất 1 chữ viết hoa",
@@ -86,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (!success) {
             Toast.makeText(this,
-                    "Email đã tồn tại",
+                    "Email hoặc Username đã tồn tại",
                     Toast.LENGTH_SHORT).show();
             return;
         }

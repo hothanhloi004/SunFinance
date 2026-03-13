@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
 import com.example.fintrack.UserService.data.UserRepository;
-import com.example.fintrack.UserService.util.LocaleHelper;// thay đổi ngôn ngữ
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,24 +28,11 @@ public class LoginActivity extends AppCompatActivity {
 
     boolean isPasswordVisible = false;
 
-    //@Override
-    //protected void onCreate(Bundle savedInstanceState) {
-    // super.onCreate(savedInstanceState);
-
-
-    //cái này đc import LocalHelper dùng để test thay đổi ngôn ngữ
-    //không hớp thì quay lại cái @Override trên
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        LocaleHelper.applyLanguage(this);
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
         prefs = getSharedPreferences("USER_SESSION", MODE_PRIVATE);
-
-
 
         // ===== AUTO LOGIN =====
         if (prefs.getBoolean("isLoggedIn", false)) {

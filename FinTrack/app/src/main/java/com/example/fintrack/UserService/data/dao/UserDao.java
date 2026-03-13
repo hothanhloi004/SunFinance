@@ -15,6 +15,9 @@ public interface UserDao {
     // tìm user theo email (dùng khi register check trùng email)
     @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
     UserEntity getUserByEmail(String email);
+    // tìm user theo fullname/username trùng
+    @Query("SELECT * FROM users WHERE full_name = :username LIMIT 1")
+    UserEntity getUserByUsername(String username);
 
     // tìm user theo username (full_name) và passwword
     @Query("SELECT * FROM users WHERE full_name = :username AND password = :password LIMIT 1")
@@ -28,6 +31,5 @@ public interface UserDao {
     @Query("UPDATE users SET full_name = :username, password = :password, avatar = :avatar WHERE user_id = :userId")
     void updateUser(String userId, String username, String password, String avatar);
 
-    @Query("UPDATE users SET language = :language WHERE user_id = :userId")
-    void updateLanguage(String userId, String language);
+
 }
