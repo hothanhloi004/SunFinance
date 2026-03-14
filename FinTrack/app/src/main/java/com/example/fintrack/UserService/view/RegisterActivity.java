@@ -79,20 +79,20 @@ public class RegisterActivity extends AppCompatActivity {
 
         UserRepository repo = new UserRepository(this);
 
-        boolean success = repo.register(email, username, password);
-
-        if (!success) {
-            Toast.makeText(this,
-                    "Email hoặc Username đã tồn tại",
-                    Toast.LENGTH_SHORT).show();
+        // Kiểm tra xem email hoặc username đã tồn tại chưa TRƯỚC KHI gửi OTP
+        if (repo.getUserByEmail(email) != null || repo.getUserByUsername(username) != null) {
+            Toast.makeText(this, "Email hoặc Username đã tồn tại", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        Toast.makeText(this,
-                "Tạo tài khoản thành công",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Đang gửi OTP đến Email...", Toast.LENGTH_SHORT).show();
 
-        finish();
+        // GỌI SANG NOTIFICATION SERVICE ĐỂ GỬI OTP VÀ MỞ MÀN HÌNH NHẬP OTP
+        com.example.fintrack.NotificationService.api.NotificationApiImpl notifApi =
+                new com.example.fintrack.NotificationService.api.NotificationApiImpl();
+
+        notifApi.sendOtp(email);
+        notifApi.openOtpView(this, email, username, password);
     }
 
     private boolean isValidGmail(String email) {
