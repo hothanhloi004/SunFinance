@@ -135,7 +135,31 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/itemBudgetAlert"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <ImageView
+                android:src="@drawable/ic_budget"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+            <TextView
+                android:text="Budget Alerts"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:src="@drawable/ic_arrow_right"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/itemLanguage"
             android:orientation="horizontal"

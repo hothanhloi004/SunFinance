@@ -7,12 +7,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.fintrack.R;
+import com.example.fintrack.AlertService.view.BudgetActivity;
 import com.example.fintrack.UserService.data.UserRepository;
 import com.example.fintrack.UserService.data.entity.UserEntity;
 
@@ -22,9 +22,11 @@ public class UserAccountProfileActivity extends AppCompatActivity {
     TextView txtName, txtEmail, txtStatus;
     Button btnLogout;
 
-
     LinearLayout itemPersonalInfo, itemSecurity, itemLanguage;
     LinearLayout itemNotification, itemDefaultCurrency, itemHelp;
+
+    // ⭐ THÊM MENU ALERT
+    LinearLayout itemBudgetAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class UserAccountProfileActivity extends AppCompatActivity {
 
         btnLogout = findViewById(R.id.btnLogout);
 
-        imgAvatar = findViewById(R.id.imgAvatar); //
+        imgAvatar = findViewById(R.id.imgAvatar);
 
         itemPersonalInfo = findViewById(R.id.itemPersonalInfo);
         itemSecurity = findViewById(R.id.itemSecurity);
@@ -50,6 +52,9 @@ public class UserAccountProfileActivity extends AppCompatActivity {
         itemNotification = findViewById(R.id.itemNotification);
         itemDefaultCurrency = findViewById(R.id.itemDefaultCurrency);
         itemHelp = findViewById(R.id.itemHelp);
+
+        // ⭐ INIT ALERT MENU
+        itemBudgetAlert = findViewById(R.id.itemBudgetAlert);
 
         // ===== LOAD USER =====
         loadUser();
@@ -71,6 +76,17 @@ public class UserAccountProfileActivity extends AppCompatActivity {
         itemSecurity.setOnClickListener(v ->
                 Toast.makeText(this, "Security Settings", Toast.LENGTH_SHORT).show()
         );
+
+        // ⭐ MỞ BUDGET ALERT
+        itemBudgetAlert.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    UserAccountProfileActivity.this,
+                    BudgetActivity.class
+            );
+
+            startActivity(intent);
+        });
 
         itemLanguage.setOnClickListener(v ->
                 Toast.makeText(this, "Language feature removed", Toast.LENGTH_SHORT).show()
